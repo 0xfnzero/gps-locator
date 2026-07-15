@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:paddingHorizontal="12dp">
+
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/joystick_step"
+        app:boxCornerRadiusBottomEnd="8dp"
+        app:boxCornerRadiusBottomStart="8dp"
+        app:boxCornerRadiusTopEnd="8dp"
+        app:boxCornerRadiusTopStart="8dp">
+
+        <com.google.android.material.textfield.MaterialAutoCompleteTextView
+            android:id="@+id/stepInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="none" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:id="@+id/coordinateText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:textColor="@color/charcoal_600"
+        android:textSize="13sp" />
+
+    <ImageButton
+        android:id="@+id/northButton"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_marginTop="8dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/move_north"
+        android:padding="14dp"
+        android:src="@drawable/ic_arrow_up" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="56dp"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/westButton"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/move_west"
+            android:padding="14dp"
+            android:rotation="-90"
+            android:src="@drawable/ic_arrow_up" />
+
+        <View
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:background="@drawable/bg_joystick_center" />
+
+        <ImageButton
+            android:id="@+id/eastButton"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/move_east"
+            android:padding="14dp"
+            android:rotation="90"
+            android:src="@drawable/ic_arrow_up" />
+    </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/southButton"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/move_south"
+        android:padding="14dp"
+        android:rotation="180"
+        android:src="@drawable/ic_arrow_up" />
+
+</LinearLayout>

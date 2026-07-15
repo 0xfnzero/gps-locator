@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GPS Lab Enterprise Control Center</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header class="app-header">
+    <div class="brand">
+      <img src="/assets/product-map.png" alt="GPS Locator map" width="72" height="44">
+      <div>
+        <h1>GPS Lab</h1>
+        <p>Enterprise control center</p>
+      </div>
+    </div>
+    <div class="header-status">
+      <span class="status-indicator" id="localStatus"><span></span>Local only</span>
+      <span class="last-refresh" id="lastRefresh">Not refreshed</span>
+      <button class="icon-button" id="refreshButton" type="button" title="Refresh devices and suites" aria-label="Refresh devices and suites">&#8635;</button>
+    </div>
+  </header>
+
+  <div class="workspace">
+    <aside class="device-panel" aria-labelledby="devicesHeading">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">ADB fleet</p>
+          <h2 id="devicesHeading">Devices</h2>
+        </div>
+        <span class="count-badge" id="deviceCount">0</span>
+      </div>
+      <div class="notice error-notice hidden" id="deviceError" role="status"></div>
+      <div class="device-list" id="deviceList"></div>
+      <div class="device-actions">
+        <button class="secondary-button device-action" id="copyDeviceIdsButton" type="button" title="Copy selected app-scoped device IDs" disabled>
+          <span aria-hidden="true">&#10697;</span>
+          Copy device IDs
+        </button>
+        <button class="secondary-button device-action" id="prepareButton" type="button" title="Grant location permissions and select GPS Locator as the mock-location app" disabled>
+          <span aria-hidden="true">&#9881;</span>
+          Prepare selected
+        </button>
+        <button class="secondary-button danger-action" id="stopButton" type="button" disabled>
+          <span aria-hidden="true">&#9632;</span>
+          Stop simulations
+        </button>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <section class="quick-location-section" aria-labelledby="quickLocationHeading">
+        <div class="section-heading main-heading">
+          <div>
+            <p class="eyebrow">Fleet command</p>
+            <h2 id="quickLocationHeading">Quick location</h2>
+          </div>
+          <span class="summary-text" id="quickLocationTarget">0 devices selected</span>
+        </div>
+        <form class="quick-location-tool" id="quickLocationForm">
+          <label class="form-field full-width" for="quickLocationName">
+            <span>Location name</span>
+            <input id="quickLocationName" name="name" type="text" maxlength="120" autocomplete="off" required value="Desktop QA location">
+          </label>
+          <label class="form-field" for="quickLatitude">
+            <span>Latitude</span>
+            <input id="quickLatitude" name="latitude" type="number" min="-90" max="90" step="any" inputmode="decimal" placeholder="40.757955" required>
+          </label>
+          <label class="form-field" for="quickLongitude">
+            <span>Longitude</span>
+            <input id="quickLongitude" name="longitude" type="number" min="-180" max="180" step="any" inputmode="decimal" placeholder="-73.985532" required>
+          </label>
+          <label class="form-field" for="quickTimeZone">
+            <span>Time zone (optional)</span>
+            <input id="quickTimeZone" name="timeZone" type="text" maxlength="100" autocomplete="off" list="timeZoneOptions" placeholder="America/New_York">
+          </label>
+          <div class="quick-location-actions">
+            <button class="primary-button" id="setLocationButton" type="submit" disabled>
+              <span aria-hidden="true">&#8982;</span>
+              Set location
+            </button>
+          </div>
+          <datalist id="timeZoneOptions">
+            <option value="UTC"></option>
+            <option value="America/New_York"></option>
+            <option value="Europe/London"></option>
+            <option value="Europe/Madrid"></option>
+            <option value="Asia/Shanghai"></option>
+            <option value="Asia/Tokyo"></option>
+          </datalist>
+        </form>
+      </section>
+
+      <section aria-labelledby="suitesHeading">
+        <div class="section-heading main-heading">
+          <div>
+            <p class="eyebrow">Shared automation</p>
+            <h2 id="suitesHeading">Scenario suites</h2>
+          </div>
+          <span class="summary-text" id="suiteSummary">0 suites</span>
+        </div>
+        <div class="suite-list" id="suiteList"></div>
+      </section>
+
+      <section class="runs-section" aria-labelledby="recentRunsHeading">
+        <div class="section-heading main-heading">
+          <div>
+            <p class="eyebrow">Traceable results</p>
+            <h2 id="recentRunsHeading">Recent runs</h2>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th scope="col">Run</th>
+                <th scope="col">Outcome</th>
+                <th scope="col">Devices</th>
+                <th scope="col">Cases</th>
+                <th scope="col">Finished</th>
+                <th scope="col"><span class="visually-hidden">Actions</span></th>
+              </tr>
+            </thead>
+            <tbody id="runTableBody"></tbody>
+          </table>
+          <div class="empty-state hidden" id="runsEmpty">No retained reports yet</div>
+        </div>
+      </section>
+    </main>
+
+    <aside class="activity-panel" aria-labelledby="activityHeading">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Live output</p>
+          <h2 id="activityHeading">Run activity</h2>
+        </div>
+        <span class="outcome-badge neutral" id="activityOutcome">Idle</span>
+      </div>
+      <div class="activity-summary" id="activitySummary">
+        <p class="empty-copy">Select an action to view command or suite output.</p>
+      </div>
+      <pre class="run-log" id="runLog" aria-live="polite">Waiting for activity.</pre>
+    </aside>
+  </div>
+
+  <div class="toast hidden" id="toast" role="status" aria-live="polite"></div>
+  <script src="/app.js" type="module"></script>
+</body>
+</html>

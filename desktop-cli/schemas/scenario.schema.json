@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://gps-locator.example/schemas/scenario.schema.json",
+  "title": "GPS Locator QA scenario",
+  "oneOf": [
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "name", "latitude", "longitude"],
+      "properties": {
+        "$schema": { "type": "string" },
+        "schemaVersion": { "const": 1 },
+        "type": { "const": "static" },
+        "name": { "type": "string", "minLength": 1 },
+        "timeZone": { "type": "string", "minLength": 1, "maxLength": 100 },
+        "latitude": { "type": "number", "minimum": -90, "maximum": 90 },
+        "longitude": { "type": "number", "minimum": -180, "maximum": 180 }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "name", "waypoints"],
+      "properties": {
+        "$schema": { "type": "string" },
+        "schemaVersion": { "const": 1 },
+        "type": { "const": "route" },
+        "id": { "type": "string", "minLength": 1 },
+        "name": { "type": "string", "minLength": 1 },
+        "timeZone": { "type": "string", "minLength": 1, "maxLength": 100 },
+        "speedKph": { "type": "number", "minimum": 0.5, "maximum": 500 },
+        "loop": { "type": "boolean" },
+        "createdAt": { "type": "integer", "minimum": 0 },
+        "waypoints": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["latitude", "longitude"],
+            "properties": {
+              "id": { "type": "string", "minLength": 1 },
+              "name": { "type": "string", "minLength": 1 },
+              "latitude": { "type": "number", "minimum": -90, "maximum": 90 },
+              "longitude": { "type": "number", "minimum": -180, "maximum": 180 },
+              "stopDurationSeconds": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 86400
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

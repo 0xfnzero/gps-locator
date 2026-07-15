@@ -1,0 +1,23 @@
+{
+  "$schema": "../schemas/scenario.schema.json",
+  "schemaVersion": 1,
+  "type": "route",
+  "name": "Route completion smoke",
+  "timeZone": "Asia/Shanghai",
+  "speedKph": 120,
+  "loop": false,
+  "waypoints": [
+    {
+      "name": "Start",
+      "latitude": 31.230416,
+      "longitude": 121.473701,
+      "stopDurationSeconds": 0
+    },
+    {
+      "name": "Finish",
+      "latitude": 31.231416,
+      "longitude": 121.473701,
+      "stopDurationSeconds": 0
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "$schema": "../schemas/suite.schema.json",
+  "schemaVersion": 1,
+  "name": "Global login and delivery release smoke",
+  "steps": [
+    {
+      "id": "us-login",
+      "scenario": "../scenarios/login-country.example.json",
+      "holdSeconds": 5,
+      "stopAfter": true
+    },
+    {
+      "id": "delivery-completion",
+      "scenario": "../scenarios/route-completion-smoke.example.json",
+      "holdSeconds": 8,
+      "stopAfter": true
+    }
+  ]
+}

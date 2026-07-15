@@ -1,0 +1,39 @@
+# Android and Gradle generated files
+.gradle/
+.kotlin/
+**/build/
+.idea/
+*.iml
+local.properties
+.cxx/
+.externalNativeBuild/
+
+# Node.js dependencies and logs
+**/node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Runtime data, retained reports, and deployment backups
+cloud-server/data/
+cloud-server/deploy/backups/
+desktop-cli/control-center-reports/
+
+# Local environment and signing material
+.env
+.env.*
+!.env.example
+*.jks
+*.keystore
+*.p12
+*.pfx
+*.pem
+*.key
+*.license.json
+license-manifest.json
+
+# Editor and operating-system files
+.DS_Store
+Thumbs.db
+*.swp
+*~

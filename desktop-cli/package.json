@@ -1,0 +1,33 @@
+{
+  "name": "gps-updater-enterprise-cli",
+  "version": "1.7.0",
+  "private": true,
+  "type": "module",
+  "files": [
+    "control-center.mjs",
+    "device-status.mjs",
+    "gps-lab.mjs",
+    "junit-report.mjs",
+    "license-tool.mjs",
+    "license.mjs",
+    "scenario.mjs",
+    "suite.mjs",
+    "scenarios/",
+    "schemas/",
+    "suites/",
+    "web/"
+  ],
+  "bin": {
+    "gps-lab": "./gps-lab.mjs",
+    "gps-license": "./license-tool.mjs",
+    "gps-control-center": "./control-center.mjs"
+  },
+  "scripts": {
+    "test": "node --test test/*.test.mjs",
+    "validate:examples": "node gps-lab.mjs suite --file suites/global-release-smoke.example.json --dry-run",
+    "control-center": "node control-center.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

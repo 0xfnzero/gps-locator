@@ -1,0 +1,23 @@
+{
+  "$schema": "../schemas/scenario.schema.json",
+  "schemaVersion": 1,
+  "type": "route",
+  "name": "Shanghai delivery smoke test",
+  "timeZone": "Asia/Shanghai",
+  "speedKph": 35,
+  "loop": false,
+  "waypoints": [
+    {
+      "name": "Warehouse",
+      "latitude": 31.230416,
+      "longitude": 121.473701,
+      "stopDurationSeconds": 10
+    },
+    {
+      "name": "Customer",
+      "latitude": 31.240416,
+      "longitude": 121.483701,
+      "stopDurationSeconds": 30
+    }
+  ]
+}

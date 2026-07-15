@@ -1,0 +1,37 @@
+{
+	admin off
+	email {$CADDY_EMAIL}
+}
+
+{$SYNC_DOMAIN} {
+	encode zstd gzip
+
+	request_body {
+		max_size {$CADDY_MAX_BODY_SIZE}
+	}
+
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		-Server
+	}
+
+	@storageReady path /ready
+	respond @storageReady 404
+
+	reverse_proxy sync:8787 {
+		health_uri /ready
+		health_interval 30s
+		health_timeout 5s
+	}
+
+	log {
+		output stdout
+		format filter {
+			wrap json
+			fields {
+				request>headers>Authorization delete
+				request>headers>Cookie delete
+			}
+		}
+	}
+}

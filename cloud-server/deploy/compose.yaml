@@ -1,0 +1,119 @@
+name: gps-updater-sync
+
+services:
+  sync:
+    build:
+      context: ..
+    environment:
+      HOST: 0.0.0.0
+      PORT: 8787
+      DATA_DIR: /data
+      MAX_BODY_BYTES: ${MAX_BODY_BYTES:-2097152}
+      RATE_LIMIT_PER_MINUTE: ${RATE_LIMIT_PER_MINUTE:-60}
+      TRUST_PROXY: "true"
+    volumes:
+      - sync-data:/data
+    expose:
+      - "8787"
+    restart: unless-stopped
+    read_only: true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,nodev,size=16m
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    networks:
+      - backend
+    stop_grace_period: 20s
+
+  caddy:
+    image: caddy:2.10.2-alpine
+    environment:
+      SYNC_DOMAIN: ${SYNC_DOMAIN:?Set SYNC_DOMAIN in .env}
+      CADDY_EMAIL: ${CADDY_EMAIL:?Set CADDY_EMAIL in .env}
+      CADDY_MAX_BODY_SIZE: ${CADDY_MAX_BODY_SIZE:-3MB}
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    depends_on:
+      sync:
+        condition: service_healthy
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - edge
+      - backend
+    stop_grace_period: 20s
+
+  backup:
+    image: alpine:3.22.2
+    profiles:
+      - tools
+    user: ${SYNC_UID:-1000}:${SYNC_GID:-1000}
+    volumes:
+      - sync-data:/data:ro
+      - ./backups:/backups
+    command:
+      - /bin/sh
+      - -ec
+      - |
+        umask 077
+        timestamp=$$(date -u +%Y%m%dT%H%M%SZ)
+        archive="gps-updater-sync-$${timestamp}.tar.gz"
+        tar -C /data -czf "/backups/$${archive}" .
+        cd /backups
+        sha256sum "$${archive}" > "$${archive}.sha256"
+        echo "/backups/$${archive}"
+    network_mode: none
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+
+  restore-empty-volume:
+    image: alpine:3.22.2
+    profiles:
+      - tools
+    user: ${SYNC_UID:-1000}:${SYNC_GID:-1000}
+    environment:
+      RESTORE_ARCHIVE: ${RESTORE_ARCHIVE:-}
+    volumes:
+      - sync-data:/data
+      - ./backups:/backups:ro
+    command:
+      - /bin/sh
+      - -ec
+      - |
+        case "$${RESTORE_ARCHIVE}" in
+          ""|*[!A-Za-z0-9._-]*) echo "Set RESTORE_ARCHIVE to a backup filename" >&2; exit 1 ;;
+        esac
+        if [ -n "$$(find /data -mindepth 1 -maxdepth 1 -print -quit)" ]; then
+          echo "Restore refused: /data is not empty" >&2
+          exit 1
+        fi
+        cd /backups
+        sha256sum -c "$${RESTORE_ARCHIVE}.sha256"
+        tar -C /data -xzf "/backups/$${RESTORE_ARCHIVE}"
+        echo "Restored $${RESTORE_ARCHIVE} into the empty volume"
+    network_mode: none
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+
+volumes:
+  sync-data:
+  caddy-data:
+  caddy-config:
+
+networks:
+  edge:
+  backend:
+    internal: true

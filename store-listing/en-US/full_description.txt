@@ -1,0 +1,21 @@
+GPS Locator is a mock-location utility for Android developers, QA engineers, and authorized device testing.
+
+Build repeatable location scenarios without manually moving a device:
+
+- Select a point by dragging the map or entering coordinates
+- Search by country, city, and district across 200+ countries and regions
+- Save frequently used locations and organize them into groups
+- Simulate multi-point routes with speed, stops, and optional loops
+- Import and export GPX or KML route files
+- Select and share saved locations and routes through team template files without personal history or sync credentials
+- Restore previous test locations from history
+- Adjust a running location with meter-level joystick controls
+- Back up favorites, routes, and history with end-to-end encryption
+
+The free version includes map and coordinate selection, region search, basic mock location, and up to five saved locations. You can also load a sample route and explore the route editor before upgrading. GPS Locator Pro is a one-time purchase that unlocks unlimited saved locations, route simulation, GPX/KML and team template exchange, history, joystick controls, and encrypted sync. The app contains no advertising.
+
+Enterprise teams can use the companion ADB command-line tool for multi-device scenarios, verified cross-time-zone tests, and JSON/JUnit reports. Suite runs restore each device's original time zone. Enterprise automation requires a signed license and privileged Android shell access.
+
+Setup requires Android Developer options. Choose GPS Locator under "Select mock location app" before starting a simulation. A persistent notification remains visible while a mock location is active and provides a Stop action.
+
+GPS Locator is designed for development and QA on devices and applications you are authorized to test. It does not conceal Android's mock-location state or bypass another app's security checks. Do not use it for fraud, attendance or game manipulation, unauthorized tracking, or evading platform controls.

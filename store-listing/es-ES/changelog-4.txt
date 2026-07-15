@@ -1,0 +1,11 @@
+Versión 2.0.0
+
+- Búsqueda por país, ciudad y distrito
+- Grupos y búsqueda de ubicaciones guardadas
+- Rutas multipunto con velocidad, paradas y repetición
+- Importación y exportación GPX/KML
+- Historial, joystick y sincronización cifrada
+- Compra única de Pro y automatización de QA empresarial
+- Vista previa de ruta de ejemplo y configuración guiada
+- Mejoras de mapa, Android 15 e idiomas
+- Suites empresariales que restauran la zona horaria

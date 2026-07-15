@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="forest_700">#146B55</color>
+    <color name="forest_600">#1B7D64</color>
+    <color name="coral_600">#D9583B</color>
+    <color name="charcoal_900">#18201E</color>
+    <color name="charcoal_600">#56615E</color>
+    <color name="white">#FFFFFF</color>
+    <color name="danger_600">#B3261E</color>
+    <color name="overlay_white">#F7FFFFFF</color>
+    <color name="divider">#DDE3E1</color>
+</resources>

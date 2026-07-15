@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://gps-locator.example/schemas/suite.schema.json",
+  "title": "GPS Locator QA scenario suite",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "name", "steps"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "schemaVersion": { "const": 1 },
+    "name": { "type": "string", "minLength": 1 },
+    "steps": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 100,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "scenario"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "scenario": { "type": "string", "minLength": 1 },
+          "holdSeconds": { "type": "integer", "minimum": 0, "maximum": 3600 },
+          "stopAfter": { "type": "boolean" }
+        }
+      }
+    }
+  }
+}

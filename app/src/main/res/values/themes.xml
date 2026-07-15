@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.GpsUpdater" parent="Theme.Material3.Light.NoActionBar">
+        <item name="colorPrimary">@color/forest_700</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorSecondary">@color/coral_600</item>
+        <item name="colorSurface">@color/white</item>
+        <item name="colorOnSurface">@color/charcoal_900</item>
+        <item name="colorError">@color/danger_600</item>
+        <item name="android:fontFamily">sans</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:statusBarColor">@color/forest_700</item>
+        <item name="android:navigationBarColor">@color/charcoal_900</item>
+    </style>
+</resources>

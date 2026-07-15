@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <org.osmdroid.views.MapView
+        android:id="@+id/map"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@string/selected_location" />
+
+    <LinearLayout
+        android:id="@+id/topBar"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:layout_gravity="top"
+        android:layout_marginHorizontal="12dp"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/bg_top_bar"
+        android:elevation="6dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="18dp"
+        android:paddingEnd="8dp">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/screen_title"
+                android:textColor="@color/charcoal_900"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/screenSubtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="1dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="@string/screen_subtitle"
+                android:textColor="@color/charcoal_600"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/regionSearchButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/region_search"
+            android:padding="12dp"
+            android:src="@drawable/ic_region_search"
+            android:tooltipText="@string/region_search" />
+
+        <ImageButton
+            android:id="@+id/routeButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/routes"
+            android:padding="12dp"
+            android:src="@drawable/ic_route"
+            android:tooltipText="@string/routes" />
+
+        <ImageButton
+            android:id="@+id/favoritesButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/favorites"
+            android:padding="12dp"
+            android:src="@drawable/ic_favorites"
+            android:tooltipText="@string/favorites" />
+
+        <ImageButton
+            android:id="@+id/developerSettingsButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/app_settings"
+            android:padding="12dp"
+            android:src="@drawable/ic_settings"
+            android:tooltipText="@string/app_settings" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/centerPin"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_gravity="center"
+        android:contentDescription="@string/selected_location"
+        android:elevation="4dp"
+        android:src="@drawable/ic_map_pin"
+        android:translationY="-28dp" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/myLocationButton"
+        style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
+        android:layout_width="52dp"
+        android:layout_height="52dp"
+        android:layout_gravity="end|bottom"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="290dp"
+        android:contentDescription="@string/center_on_device"
+        android:elevation="6dp"
+        android:insetLeft="0dp"
+        android:insetTop="0dp"
+        android:insetRight="0dp"
+        android:insetBottom="0dp"
+        app:backgroundTint="@color/white"
+        app:cornerRadius="8dp"
+        app:icon="@drawable/ic_my_location"
+        app:iconGravity="textStart"
+        app:iconPadding="0dp"
+        app:iconTint="@color/forest_700"
+        android:tooltipText="@string/center_on_device" />
+
+    <TextView
+        android:id="@+id/attributionText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start|bottom"
+        android:layout_marginStart="12dp"
+        android:layout_marginBottom="294dp"
+        android:background="@drawable/bg_top_bar"
+        android:paddingHorizontal="7dp"
+        android:paddingVertical="4dp"
+        android:text="@string/map_attribution"
+        android:textColor="@color/charcoal_600"
+        android:textSize="11sp" />
+
+    <LinearLayout
+        android:id="@+id/controlPanel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="@drawable/bg_control_panel"
+        android:elevation="16dp"
+        android:orientation="vertical"
+        android:paddingStart="20dp"
+        android:paddingTop="16dp"
+        android:paddingEnd="20dp"
+        android:paddingBottom="18dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <View
+                android:id="@+id/statusDot"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:background="@drawable/bg_status_stopped" />
+
+            <TextView
+                android:id="@+id/statusText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="9dp"
+                android:layout_weight="1"
+                android:text="@string/status_stopped"
+                android:textColor="@color/charcoal_900"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/accuracyText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/location_accuracy"
+                android:textColor="@color/charcoal_600"
+                android:textSize="12sp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/proButton"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="56dp"
+                android:layout_height="36dp"
+                android:layout_marginStart="6dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:minWidth="0dp"
+                android:paddingHorizontal="8dp"
+                android:text="@string/pro_short"
+                android:textAllCaps="false"
+                android:textColor="@color/coral_600"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:cornerRadius="8dp"
+                app:strokeColor="@color/coral_600" />
+
+            <ImageButton
+                android:id="@+id/favoriteCurrentButton"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="4dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/favorite_current"
+                android:padding="8dp"
+                android:src="@drawable/ic_star_outline"
+                android:tooltipText="@string/favorite_current" />
+        </LinearLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/setupMockLocationButton"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_width="match_parent"
+            android:layout_height="46dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/setup_mock_location"
+            android:textAllCaps="false"
+            android:textColor="@color/forest_700"
+            app:cornerRadius="8dp"
+            app:icon="@drawable/ic_settings"
+            app:iconTint="@color/forest_700"
+            app:strokeColor="@color/forest_700" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:baselineAligned="false"
+            android:orientation="horizontal">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/latitudeLayout"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="6dp"
+                android:layout_weight="1"
+                android:hint="@string/latitude"
+                app:boxCornerRadiusBottomEnd="8dp"
+                app:boxCornerRadiusBottomStart="8dp"
+                app:boxCornerRadiusTopEnd="8dp"
+                app:boxCornerRadiusTopStart="8dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/latitudeInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:imeOptions="actionNext"
+                    android:inputType="numberDecimal|numberSigned"
+                    android:maxLines="1"
+                    android:textColor="@color/charcoal_900"
+                    android:textSize="15sp" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/longitudeLayout"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:layout_weight="1"
+                android:hint="@string/longitude"
+                app:boxCornerRadiusBottomEnd="8dp"
+                app:boxCornerRadiusBottomStart="8dp"
+                app:boxCornerRadiusTopEnd="8dp"
+                app:boxCornerRadiusTopStart="8dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/longitudeInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:imeOptions="actionDone"
+                    android:inputType="numberDecimal|numberSigned"
+                    android:maxLines="1"
+                    android:textColor="@color/charcoal_900"
+                    android:textSize="15sp" />
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_marginTop="14dp"
+            android:orientation="horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/startButton"
+                style="@style/Widget.Material3.Button"
+                android:layout_width="0dp"
+                android:layout_height="52dp"
+                android:layout_marginEnd="6dp"
+                android:layout_weight="1"
+                android:text="@string/start_mock"
+                android:textAllCaps="false"
+                android:textSize="15sp"
+                app:backgroundTint="@color/forest_700"
+                app:cornerRadius="8dp"
+                app:icon="@drawable/ic_play"
+                app:iconTint="@color/white" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/stopButton"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="112dp"
+                android:layout_height="52dp"
+                android:layout_marginStart="6dp"
+                android:enabled="false"
+                android:text="@string/stop_mock"
+                android:textAllCaps="false"
+                android:textColor="@color/danger_600"
+                android:textSize="15sp"
+                app:cornerRadius="8dp"
+                app:icon="@drawable/ic_stop"
+                app:iconTint="@color/danger_600"
+                app:strokeColor="@color/danger_600" />
+        </LinearLayout>
+    </LinearLayout>
+
+</FrameLayout>

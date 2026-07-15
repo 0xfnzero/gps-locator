@@ -1,0 +1,9 @@
+{
+  "$schema": "../schemas/scenario.schema.json",
+  "schemaVersion": 1,
+  "type": "static",
+  "name": "US login location",
+  "timeZone": "America/New_York",
+  "latitude": 40.757955,
+  "longitude": -73.985532
+}
