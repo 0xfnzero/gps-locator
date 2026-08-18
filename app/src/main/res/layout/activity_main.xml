@@ -182,24 +182,6 @@
                 android:textColor="@color/charcoal_600"
                 android:textSize="12sp" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/proButton"
-                style="@style/Widget.Material3.Button.OutlinedButton"
-                android:layout_width="56dp"
-                android:layout_height="36dp"
-                android:layout_marginStart="6dp"
-                android:insetTop="0dp"
-                android:insetBottom="0dp"
-                android:minWidth="0dp"
-                android:paddingHorizontal="8dp"
-                android:text="@string/pro_short"
-                android:textAllCaps="false"
-                android:textColor="@color/coral_600"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                app:cornerRadius="8dp"
-                app:strokeColor="@color/coral_600" />
-
             <ImageButton
                 android:id="@+id/favoriteCurrentButton"
                 android:layout_width="40dp"

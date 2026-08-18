@@ -1,6 +1,6 @@
-# GPS Updater Enterprise CLI
+# GPS Locator ADB CLI
 
-Controls one or many Android QA devices through ADB. The Android receiver requires the system `DUMP` permission, so ordinary installed apps cannot issue enterprise commands.
+Controls one or many Android QA devices through ADB. The Android receiver requires the system `DUMP` permission, so ordinary installed apps cannot issue lab commands.
 
 ```bash
 npm test
@@ -20,7 +20,7 @@ npm run control-center
 
 The `prepare` command grants location access and selects GPS Locator as the mock-location app through AppOps. GPX, KML, and the app route JSON schema are accepted by the `route` command.
 
-The `status` command prints one JSON line per connected device with the installed app version, product tier, app-scoped device ID, mock-location readiness, active-simulation state, Enterprise license summary, stable `readiness` code, and `commandReady` boolean. A missing app or receiver failure is retained as `available: false` for that serial instead of hiding other connected devices. Add `--require-ready` in CI to emit every record and then exit nonzero when any selected device needs setup, needs an Enterprise license, or has unavailable status; an already active simulation remains command-ready. Status and device-ID broadcasts are read-only, protected by Android's signature-level `DUMP` permission, and available before Enterprise license activation so operators can diagnose and provision a new device.
+The `status` command prints one JSON line per connected device with the installed app version, product tier, app-scoped device ID, mock-location readiness, active-simulation state, optional license summary, stable `readiness` code, and `commandReady` boolean. A missing app or receiver failure is retained as `available: false` for that serial instead of hiding other connected devices. Add `--require-ready` in CI to emit every record and then exit nonzero when any selected device needs setup or has unavailable status; an already active simulation remains command-ready. Status and device-ID broadcasts are read-only, protected by Android's signature-level `DUMP` permission.
 
 `--serial` accepts `all`, one serial, or a comma-separated subset such as `emulator-5554,qa-phone-02`. This same subset selection is available in the control center. The `set` command and Quick location form accept an optional validated IANA time zone. A standalone quick/static command intentionally leaves that time zone active with the mock location; use a suite when the original device time zone must be captured and restored automatically.
 
@@ -93,7 +93,7 @@ node control-center.mjs \
 
 The control center intentionally listens only on `localhost`, `127.0.0.1`, or `::1`. Mutating API calls require a per-process control token and same-origin JSON requests. It does not accept client-supplied suite paths or shell commands, and it prevents overlapping suite runs. Use the CLI directly for headless CI; use `--no-open` when starting the control center without launching a browser.
 
-## Enterprise licenses
+## Optional signed licenses
 
 Generate a private RSA key once and keep it outside the repository:
 
@@ -124,7 +124,7 @@ Device-bound licenses use schema version 2 and include the normalized Android ID
 
 Use `gps-lab device-id` or the copy action on the app's Enterprise license screen. Do not substitute `adb shell settings get secure android_id`: Android 8 and newer scope this identifier to the app signing key and user, so the shell can observe a different value. The device-ID receiver is protected by Android's signature-level `DUMP` permission and does not require an existing license, allowing first-time provisioning from an authorized ADB shell.
 
-For a device-priced customer, select the target fleet in the control center and use **Copy device IDs**. The copied rows are `serial<TAB>app-scoped-device-id`, which can be passed directly to the offline batch issuer:
+To issue a device batch, select the target fleet in the control center and use **Copy device IDs**. The copied rows are `serial<TAB>app-scoped-device-id`, which can be passed directly to the offline batch issuer:
 
 ```bash
 node license-tool.mjs --private-key enterprise-private.pem \
@@ -145,4 +145,4 @@ node license-tool.mjs \
 
 Verification checks the public-key fingerprint, manifest signature, safe relative file names, unique device mappings, exact document hashes, manifest/license field agreement, every license signature, and every device binding. Keep the manifest and licenses in the customer delivery record, but handle them as customer device data. The private key is never copied into the output directory and is not accepted by verification mode.
 
-The customer imports the license file from the app settings. The same Enterprise license screen shows and copies the current Android ID, displays the licensed organization, expiration state, and device binding, and provides replace or renew actions without clearing app data. Release builds reject ADB enterprise commands until a valid, non-expired license is active.
+The customer imports the license file from the app settings. ADB commands work without a license; signed licenses are optional for teams that want to identify devices.

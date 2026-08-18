@@ -10,7 +10,6 @@ import com.gpsupdater.app.location.MockLocationAccess
 import com.gpsupdater.app.location.MockLocationPreferences
 import com.gpsupdater.app.model.Coordinates
 import com.gpsupdater.app.product.EntitlementRepository
-import com.gpsupdater.app.product.ProductTier
 import com.gpsupdater.app.routes.LocationDocumentCodec
 import com.gpsupdater.app.routes.RouteJsonCodec
 import com.gpsupdater.app.routes.RouteRepository
@@ -28,11 +27,6 @@ class EnterpriseControlReceiver : BroadcastReceiver() {
                 accept(deviceStatus(context))
                 return
             }
-        }
-        if (!BuildConfig.DEBUG && EntitlementRepository(context).currentTier() != ProductTier.ENTERPRISE) {
-            resultCode = RESULT_NOT_LICENSED
-            resultData = "enterprise_license_required"
-            return
         }
         try {
             when (intent.action) {

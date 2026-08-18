@@ -56,9 +56,6 @@ import com.gpsupdater.app.location.MockLocationService
 import com.gpsupdater.app.model.Coordinates
 import com.gpsupdater.app.product.EntitlementRepository
 import com.gpsupdater.app.product.ProductFeature
-import com.gpsupdater.app.product.ProductTier
-import com.gpsupdater.app.product.ProBillingManager
-import com.gpsupdater.app.product.ProUpgradeActivity
 import com.gpsupdater.app.privacy.LocalTestDataCleaner
 import com.gpsupdater.app.routes.RouteEditorActivity
 import com.gpsupdater.app.routes.GeoMath
@@ -89,7 +86,6 @@ class MainActivity : AppCompatActivity() {
     private val cloudSyncSettings by lazy { CloudSyncSettings(this) }
     private val teamTemplateRepository by lazy { TeamTemplateBundleRepository(this) }
     private var cloudSyncClient: CloudSyncClient? = null
-    private var entitlementSyncManager: ProBillingManager? = null
     private var receiverRegistered = false
     private var pendingPermissionAction: PermissionAction? = null
     private var pendingRouteId: String? = null
@@ -151,7 +147,6 @@ class MainActivity : AppCompatActivity() {
         val result = document?.let(entitlementRepository::activateEnterpriseLicense)
         result?.onSuccess { license ->
             showMessage(getString(R.string.enterprise_license_active, license.organization))
-            updateProductEntryPoints()
         }?.onFailure {
             showMessage(getString(R.string.enterprise_license_invalid))
         } ?: showMessage(getString(R.string.enterprise_license_invalid))
@@ -256,8 +251,6 @@ class MainActivity : AppCompatActivity() {
             if (MockLocationPreferences.isActive(this)) ServiceState.RUNNING
             else ServiceState.STOPPED,
         )
-        updateProductEntryPoints()
-        synchronizeProEntitlement()
         updateMockLocationSetup()
         maybeShowSetupGuide()
     }
@@ -292,7 +285,6 @@ class MainActivity : AppCompatActivity() {
             if (MockLocationPreferences.isActive(this)) ServiceState.RUNNING
             else ServiceState.STOPPED,
         )
-        updateProductEntryPoints()
         updateMockLocationSetup()
     }
 
@@ -311,8 +303,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
-        entitlementSyncManager?.close()
-        entitlementSyncManager = null
         cloudSyncClient?.close()
         geocoder.close()
         binding.map.onDetach()
@@ -415,7 +405,6 @@ class MainActivity : AppCompatActivity() {
         binding.routeButton.setOnClickListener { openRouteEditor() }
         binding.favoritesButton.setOnClickListener { showFavorites() }
         binding.favoriteCurrentButton.setOnClickListener { showSaveFavorite() }
-        binding.proButton.setOnClickListener { openProUpgrade() }
         binding.setupMockLocationButton.setOnClickListener { showMockLocationDialog() }
         binding.myLocationButton.setOnClickListener {
             if (hasLocationPermission()) {
@@ -501,25 +490,6 @@ class MainActivity : AppCompatActivity() {
             mockLocationEnabled = MockLocationAccess.isEnabled(this),
         )
 
-    private fun updateProductEntryPoints() {
-        binding.proButton.visibility = if (
-            entitlementRepository.canUse(ProductFeature.ROUTE_SIMULATION)
-        ) View.GONE else View.VISIBLE
-    }
-
-    private fun synchronizeProEntitlement() {
-        if (BuildConfig.DEBUG || entitlementSyncManager != null) return
-        entitlementSyncManager = ProBillingManager(this, entitlementRepository) { state ->
-            updateProductEntryPoints()
-            if (state.ownershipChecked) {
-                binding.root.post {
-                    entitlementSyncManager?.close()
-                    entitlementSyncManager = null
-                }
-            }
-        }.also { it.connect(loadProductDetails = false) }
-    }
-
     private fun maybeShowSetupGuide() {
         if (BuildConfig.DEBUG || currentMockLocationSetupStep() == MockLocationSetupStep.READY) return
         val preferences = getSharedPreferences(ONBOARDING_PREFERENCES, MODE_PRIVATE)
@@ -559,7 +529,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun showAppSettings() {
         val options = arrayOf(
-            getString(R.string.pro_title),
             getString(R.string.routes),
             getString(R.string.history),
             getString(R.string.joystick),
@@ -575,17 +544,16 @@ class MainActivity : AppCompatActivity() {
             .setTitle(R.string.app_settings)
             .setItems(options) { _, index ->
                 when (index) {
-                    0 -> openProUpgrade()
-                    1 -> openRouteEditor()
-                    2 -> showHistory()
-                    3 -> showJoystick()
-                    4 -> showCloudSync()
-                    5 -> showTeamTemplates()
-                    6 -> showLanguageDialog()
-                    7 -> showEnterpriseLicense()
-                    8 -> showPrivacyAndData()
-                    9 -> showAboutAndSupport()
-                    10 -> openDeveloperOptions()
+                    0 -> openRouteEditor()
+                    1 -> showHistory()
+                    2 -> showJoystick()
+                    3 -> showCloudSync()
+                    4 -> showTeamTemplates()
+                    5 -> showLanguageDialog()
+                    6 -> showEnterpriseLicense()
+                    7 -> showPrivacyAndData()
+                    8 -> showAboutAndSupport()
+                    9 -> openDeveloperOptions()
                 }
             }
             .setNegativeButton(R.string.close, null)
@@ -648,13 +616,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showAboutAndSupport() {
-        val edition = getString(
-            when (entitlementRepository.currentTier()) {
-                ProductTier.FREE -> R.string.edition_free
-                ProductTier.PRO -> R.string.edition_pro
-                ProductTier.ENTERPRISE -> R.string.edition_enterprise
-            },
-        )
+        val license = entitlementRepository.enterpriseStatus()?.takeIf { it.isActive() }
+        val edition = if (license == null) {
+            getString(R.string.edition_open_source)
+        } else {
+            getString(R.string.edition_licensed, license.organization)
+        }
         val supportAddress = configuredSupportEmail()
         val message = listOf(
             getString(R.string.about_version, BuildConfig.VERSION_NAME),
@@ -756,10 +723,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showCloudSync() {
-        if (!entitlementRepository.canUse(ProductFeature.CLOUD_SYNC)) {
-            showProRequired()
-            return
-        }
         val syncBinding = DialogCloudSyncBinding.inflate(layoutInflater)
         val saved = cloudSyncSettings.load()
         syncBinding.endpointInput.setText(saved.endpoint)
@@ -848,10 +811,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showTeamTemplates() {
-        if (!entitlementRepository.canUse(ProductFeature.FILE_IMPORT_EXPORT)) {
-            showProRequired()
-            return
-        }
         val options = arrayOf(
             getString(R.string.import_team_templates),
             getString(R.string.export_team_templates),
@@ -1018,15 +977,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun openProUpgrade() {
-        startActivity(Intent(this, ProUpgradeActivity::class.java))
-    }
-
     private fun showJoystick() {
-        if (!entitlementRepository.canUse(ProductFeature.JOYSTICK)) {
-            showProRequired()
-            return
-        }
         val joystickBinding = DialogJoystickBinding.inflate(layoutInflater)
         val steps = intArrayOf(1, 5, 10, 50, 100)
         val labels = steps.map { getString(R.string.distance_meters, it) }
@@ -1076,10 +1027,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showHistory() {
-        if (!entitlementRepository.canUse(ProductFeature.LOCATION_HISTORY)) {
-            showProRequired()
-            return
-        }
         val entries = historyRepository.all()
         if (entries.isEmpty()) {
             MaterialAlertDialogBuilder(this)
@@ -1172,15 +1119,6 @@ class MainActivity : AppCompatActivity() {
             this,
             MockLocationService.startRouteIntent(this, routeId),
         )
-    }
-
-    private fun showProRequired() {
-        MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.pro_required)
-            .setMessage(R.string.pro_required_message)
-            .setNegativeButton(R.string.cancel, null)
-            .setPositiveButton(R.string.view_pro) { _, _ -> openProUpgrade() }
-            .show()
     }
 
     private fun showLanguageDialog() {
@@ -1318,7 +1256,6 @@ class MainActivity : AppCompatActivity() {
         val existingFavorite = favoriteRepository.all().any { it.coordinates == coordinates }
         if (!existingFavorite && favoriteRepository.all().size >= entitlementRepository.favoriteLimit()) {
             showMessage(getString(R.string.favorite_limit_reached))
-            showProRequired()
             return
         }
         val favoriteBinding = DialogSaveFavoriteBinding.inflate(layoutInflater)

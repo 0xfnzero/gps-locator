@@ -12,9 +12,9 @@ Build repeatable location scenarios without manually moving a device:
 - Adjust a running location with meter-level joystick controls
 - Back up favorites, routes, and history with end-to-end encryption
 
-The free version includes map and coordinate selection, region search, basic mock location, and up to five saved locations. You can also load a sample route and explore the route editor before upgrading. GPS Locator Pro is a one-time purchase that unlocks unlimited saved locations, route simulation, GPX/KML and team template exchange, history, joystick controls, and encrypted sync. The app contains no advertising.
+The free, open-source app includes map and coordinate selection, region search, unlimited saved locations, route simulation, GPX/KML and team template exchange, history, joystick controls, and encrypted sync. The app contains no advertising.
 
-Enterprise teams can use the companion ADB command-line tool for multi-device scenarios, verified cross-time-zone tests, and JSON/JUnit reports. Suite runs restore each device's original time zone. Enterprise automation requires a signed license and privileged Android shell access.
+Companion ADB tools can run multi-device scenarios, verified cross-time-zone tests, and JSON/JUnit reports. Suite runs restore each device's original time zone. Automation requires privileged Android shell access.
 
 Setup requires Android Developer options. Choose GPS Locator under "Select mock location app" before starting a simulation. A persistent notification remains visible while a mock location is active and provides a Stop action.
 

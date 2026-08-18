@@ -264,7 +264,7 @@ test("suite executes every step and writes consolidated device results", () => {
 });
 
 test("suite writes a failure summary before returning a nonzero status", () => {
-  const harness = createAdbHarness("4", "license_required");
+  const harness = createAdbHarness("4", "unsupported_action");
   const fixture = createSuiteFixture(harness.directory);
   const output = join(harness.directory, "failed-suite");
   const result = runCli(harness, ["suite", "--file", fixture.suite, "--output", output]);
@@ -275,10 +275,10 @@ test("suite writes a failure summary before returning a nonzero status", () => {
   const junit = readFileSync(join(output, "suite-results.junit.xml"), "utf8");
   assert.equal(summary.outcome, "failed");
   assert.equal(summary.steps[0].devices[0].outcome, "failed");
-  assert.match(summary.steps[0].devices[0].error, /license_required/);
+  assert.match(summary.steps[0].devices[0].error, /unsupported_action/);
   assert.match(junit, /failures="3"/);
   assert.match(junit, /<failure type="GpsLabFailure"/);
-  assert.match(junit, /license_required/);
+  assert.match(junit, /unsupported_action/);
 });
 
 test("suite applies scenario time zones and restores each device environment", () => {

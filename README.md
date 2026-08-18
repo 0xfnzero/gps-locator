@@ -1,65 +1,65 @@
-# GPS 定位器
+# GPS Locator
 
-一个面向 Android 开发和 QA 测试的模拟位置产品。支持单点、全球地区检索、多点路线、历史、文件交换、加密同步和 ADB 多设备自动化。
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Platform](https://img.shields.io/badge/platform-Android%208%2B-3DDC84.svg)](https://github.com/0xfnzero/gps-locator/releases)
+[![API](https://img.shields.io/badge/API-26%2B-blue.svg)](app/build.gradle.kts)
+[![Kotlin](https://img.shields.io/badge/language-Kotlin-7F52FF.svg)](https://kotlinlang.org/)
+[![Release](https://img.shields.io/github/v/release/0xfnzero/gps-locator)](https://github.com/0xfnzero/gps-locator/releases)
 
-## 功能
+Open-source **Android mock location** / **fake GPS** tool for developers and QA. Simulate a single point, search 200+ countries, replay GPX/KML routes, sync encrypted backups, and drive a device fleet over ADB.
 
-- 清晰的 OpenStreetMap 地图拖动、缩放和点击选点
-- 覆盖 200 多个国家和地区，支持国家下拉、城市与地区逐级联想及组合检索
-- 跟随系统、简体中文、English、日本語和 Español 应用语言切换
-- 当前地区或任意坐标收藏，Pro 不限制收藏数量
-- 收藏位置预览、删除和一键开始模拟
-- 收藏分组、搜索和免费版 5 个收藏上限
-- 多点路线、速度、途经点停留和循环模拟
-- GPX/KML 导入导出与米级摇杆微调
-- 团队模板可勾选需要共享的收藏位置和路线，导入前预览覆盖数量，不携带个人历史或同步密钥
-- 位置历史和一键恢复
-- Google Play 一次性 Pro 购买与恢复购买
-- 端到端加密云备份、多设备冲突重试和删除标记合并
-- 可在应用内清除本地位置、路线、历史和企业报告，并保留付费权益
-- 企业套件可同步切换 GPS 与 IANA 时区，结束后恢复每台设备原时区
-- 本机企业控制台可向任意设备子集快速下发坐标/时区，停止后自动生成并下载 JSON/JUnit 报告
-- 前台持续模拟 GPS/网络位置，通知栏可随时停止
+[中文说明](README.zh-CN.md) · [Releases](https://github.com/0xfnzero/gps-locator/releases) · [Contributing](CONTRIBUTING.md)
 
-Debug 构建自动启用 Pro，便于本地验收。Release 构建默认为 Free，只有 Google Play 已确认购买后才激活 Pro；ADB 企业控制还需要有效的签名许可证。
+## Why GPS Locator
 
-## 环境要求
+GPS Locator is a developer mock GPS app, not a commercial fake-location product. Every feature is free and included in the source:
 
-- Android Studio Ladybug 或更新版本
-- JDK 17（Android Studio 自带的 JBR 即可）
-- Android SDK 35
-- Android 8.0（API 26）或更高版本的真机/模拟器
+- OpenStreetMap map picker with tap, drag, zoom, and coordinate input
+- Country / city / district search across 200+ regions
+- Saved locations, groups, history, and meter-level joystick
+- Multi-point route simulation with speed, stops, and loops
+- GPX / KML import and export, plus team template JSON
+- Optional end-to-end encrypted cloud backup
+- ADB CLI and local control center for multi-device QA
 
-## 构建
+Use it to test maps, logistics, weather, localization, and other location-aware apps on devices you are authorized to test. It does not hide Android mock-location state or bypass another app’s security checks.
+
+## Install
+
+Download the latest APK from [GitHub Releases](https://github.com/0xfnzero/gps-locator/releases).
+
+1. Enable Developer options on the Android device.
+2. Open **Select mock location app** and choose **GPS Locator**.
+3. Grant location and notification permissions, then start a simulation.
+
+If the app does not appear in the mock-location list, install 2.0.0 or newer, launch it once, then leave and re-enter Developer options.
+
+## Build from source
+
+Requires Android Studio Ladybug+, JDK 17, and Android SDK 35.
 
 ```bash
-./gradlew assembleDebug
+./gradlew assembleRelease
 ```
 
-生成的 APK 位于 `app/build/outputs/apk/debug/app-debug.apk`。
+The signed APK is written to `app/build/outputs/apk/release/app-release.apk`. Without `GPS_UPLOAD_*` secrets the Release build is signed with the Android debug key so you can install it locally.
 
-## 真机使用
+```bash
+./gradlew testDebugUnitTest lintDebug
+(cd desktop-cli && npm test)
+(cd cloud-server && npm test)
+```
 
-1. 在系统设置中开启开发者选项。
-2. 打开“开发者选项”中的“选择模拟位置信息应用”。
-3. 选择“GPS 定位器”。
-4. 返回 App，拖动/点击地图，或通过顶部的地区按钮选择位置。
-5. 点击“开始模拟”，允许位置与通知权限。
-6. 使用 App 内的“停止”按钮或通知栏动作结束模拟。
+## Optional services
 
-如果“选择模拟位置信息应用”列表中没有出现本 App，请确认安装的是 `2.0.0` 或更新版本；安装更新后退出并重新进入开发者选项。部分系统还需要先启动一次 App，列表才会刷新。
+| Path | What it is |
+| --- | --- |
+| [`desktop-cli`](desktop-cli/README.md) | ADB lab CLI, local web control center, scenario suites, JSON/JUnit reports |
+| [`cloud-server`](cloud-server/README.md) | Self-hosted encrypted backup server with Caddy HTTPS deploy pack |
+| [`store-listing`](store-listing/README.md) | Optional Play Store listing copy and screenshot tools |
+| [`docs/PRIVACY_POLICY.md`](docs/PRIVACY_POLICY.md) | Privacy policy template |
 
-部分银行、支付、出行和游戏 App 会主动识别并拒绝模拟位置，这是目标 App 的安全策略，本项目不会尝试绕过。请仅在自己有权测试的设备和应用中使用。
-
-## 地图与坐标
-
-地图和地区检索数据来自 OpenStreetMap，地区检索需要联网。地图坐标和 Android Location API 均使用 WGS84。中国大陆部分商业地图使用 GCJ-02，因此在这些地图中查看时可能出现数百米偏移。
-
-国家列表来自系统 ISO 国家数据，覆盖 200 多个国家和地区。国家名称、界面文本以及 OpenStreetMap 搜索结果会跟随 App 当前语言。
-
-## 商业服务配置
-
-Debug 默认使用公共 OpenStreetMap/Nominatim。商业发布时应通过 CI 环境变量切换到自建或商业服务：
+Map tiles default to public OpenStreetMap / Nominatim. For heavier use, point the build at your own tile and geocoding endpoints:
 
 ```bash
 GPS_TILE_URL_TEMPLATE='https://tiles.example.com/{z}/{x}/{y}.png' \
@@ -67,19 +67,13 @@ GPS_GEOCODING_BASE_URL='https://geocode.example.com' \
 GPS_MAP_ATTRIBUTION='© Your map provider' \
 GPS_PRIVACY_POLICY_URL='https://example.com/privacy/gps-locator' \
 GPS_SUPPORT_EMAIL='support@example.com' \
-GPS_ENTERPRISE_SALES_EMAIL='enterprise@example.com' \
-GPS_ENTERPRISE_LICENSE_PUBLIC_KEY='<Base64 DER RSA public key>' \
-GPS_COMMERCIAL_RELEASE=true \
-./gradlew bundleRelease
+./gradlew assembleRelease
 ```
 
-以上 `example.com` 值仅用于说明，商业构建会拒绝示例、测试和本机地址，也会拒绝占位邮箱与不可公开访问的隐私政策 URL。`GPS_PRIVACY_POLICY_URL` 会写入 App 的“设置 > 隐私与数据”，`GPS_SUPPORT_EMAIL` 会写入“设置 > 关于与支持”，`GPS_ENTERPRISE_SALES_EMAIL` 会写入 Pro 页面中的企业咨询入口；未单独设置销售邮箱时会回退到客服邮箱。`GPS_ENTERPRISE_LICENSE_PUBLIC_KEY` 必须是至少 2048 位 RSA 公钥的 Base64 DER 编码，只放公钥，私钥不得进入仓库或构建环境。商业构建要求这些配置有效。Google Play 上传产物位于 `app/build/outputs/bundle/release/app-release.aab`。本地默认产物未使用生产上传密钥签名，发布前必须配置 Play App Signing 与私有上传密钥。
+## Topics
 
-## 配套服务
+`android` `gps` `mock-location` `fake-gps` `location-simulator` `qa` `testing` `adb` `openstreetmap` `gpx` `kml` `kotlin`
 
-- [`cloud-server`](cloud-server/README.md)：无第三方运行依赖的加密同步服务，附带 Caddy HTTPS、持久卷和防误覆盖备份恢复的私有部署包。
-- [`desktop-cli`](desktop-cli/README.md)：本机 Web 控制台、多设备 ADB 控制、版本化团队场景套件、企业许可证，以及 JSON/JUnit 汇总报告。
-- [`store-listing`](store-listing/README.md)：四语言 Google Play 文案、真实设备截图、特性图与自动校验工具。
-- [`docs/COMMERCIALIZATION.md`](docs/COMMERCIALIZATION.md)：Free/Pro/Enterprise 产品与定价设计。
-- [`docs/RELEASE.md`](docs/RELEASE.md)：Google Play 商品、签名、地图服务和发布检查清单。
-- [`docs/PRIVACY_POLICY.md`](docs/PRIVACY_POLICY.md)：发布前需要补全并托管的隐私政策模板。
+## License
+
+[MIT](LICENSE)

@@ -21,7 +21,7 @@ test("device status validation accepts the Android schema and rejects partial pa
   assert.equal(isDeviceStatusPayload({ ...payload, enterprise: null }), false);
 });
 
-test("device readiness distinguishes setup, licensing, activity, and unavailable states", () => {
+test("device readiness distinguishes setup, activity, and unavailable states", () => {
   assert.deepEqual(assessDeviceStatus({ ...payload, available: true }), {
     commandReady: true,
     readiness: "ready",
@@ -31,9 +31,10 @@ test("device readiness distinguishes setup, licensing, activity, and unavailable
   assert.equal(assessDeviceStatus({
     ...payload,
     available: true,
+    debug: false,
     tier: "pro",
     enterprise: { organization: "", expiresAt: 0, active: false, deviceBound: false },
-  }).readiness, "license_required");
+  }).readiness, "ready");
   assert.deepEqual(assessDeviceStatus({ available: false }), {
     commandReady: false,
     readiness: "status_unavailable",

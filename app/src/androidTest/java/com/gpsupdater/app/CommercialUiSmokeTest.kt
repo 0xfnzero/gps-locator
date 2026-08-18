@@ -5,12 +5,10 @@ import androidx.test.espresso.Espresso.onData
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.Espresso.pressBack
 import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.action.ViewActions.scrollTo
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.isChecked
-import androidx.test.espresso.matcher.ViewMatchers.isEnabled
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.espresso.matcher.RootMatchers.isDialog
@@ -64,26 +62,6 @@ class CommercialUiSmokeTest {
             .edit()
             .clear()
             .commit()
-    }
-
-    @Test
-    fun proPageShowsOneTimeUpgradeAndImplementedFeatures() {
-        onView(withId(R.id.developerSettingsButton)).perform(click())
-        onView(withText(R.string.pro_title)).perform(click())
-
-        onView(withText(R.string.pro_one_time)).check(matches(isDisplayed()))
-        onView(withText(R.string.pro_value_title)).check(matches(isDisplayed()))
-        onView(withText(R.string.pro_feature_list)).check(matches(isDisplayed()))
-        onView(withText(R.string.pro_debug_active)).check(matches(isDisplayed()))
-        onView(withText(R.string.enterprise_for_qa_teams)).perform(scrollTo()).check(matches(isDisplayed()))
-        onView(withId(R.id.enterpriseSalesButton)).perform(scrollTo()).check(matches(isDisplayed()))
-        if (BuildConfig.ENTERPRISE_SALES_EMAIL.isBlank()) {
-            onView(withText(R.string.enterprise_sales_contact_unavailable))
-                .perform(scrollTo())
-                .check(matches(isDisplayed()))
-        } else {
-            onView(withId(R.id.enterpriseSalesButton)).check(matches(isEnabled()))
-        }
     }
 
     @Test
@@ -230,7 +208,7 @@ class CommercialUiSmokeTest {
                 containsString(
                     context.getString(
                         R.string.about_edition,
-                        context.getString(R.string.edition_pro),
+                        context.getString(R.string.edition_open_source),
                     ),
                 ),
             ),

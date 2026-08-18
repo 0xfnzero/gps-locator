@@ -10,18 +10,17 @@ Recommended initial configuration:
 - Category: Tools
 - Ads declaration: No ads
 - Target audience: Adults; the product is a developer and QA utility, not a children's app
-- Pricing: Free download, with `gps_updater_pro_lifetime` at approximately ¥28 or USD 4.99
+- Pricing: Free
 - App access: Core features require no account; reviewers need instructions for enabling Developer options and selecting the mock-location app
 - Countries: Start with markets supported by the chosen map, geocoding, privacy, tax, and customer-support arrangements
 
 Console items that require the final production providers or publisher identity:
 
 - Public privacy-policy HTTPS URL based on `docs/PRIVACY_POLICY.md`
-- Data safety answers for map/geocoding requests, optional encrypted sync, billing, and diagnostics actually used in production
+- Data safety answers for map/geocoding requests, optional encrypted sync, and diagnostics actually used in production
 - Publisher legal name, support email, website, and jurisdiction
 - Content-rating questionnaire and target-audience declaration
-- Internal-test reviewer instructions and a licensed enterprise test path when enterprise features are reviewed
-- Internal-track Pro purchase screenshot showing the real localized Play price and purchase state; do not substitute the Debug-build Pro screen
+- Internal-test reviewer instructions for mock-location setup
 - Any tablet/Chromebook screenshots required for the selected device catalog
 
 Do not describe the product as undetectable, anti-detection, attendance manipulation, game cheating, fraud, or a way to bypass another app's controls. Store copy should remain focused on development, QA, demonstrations, logistics testing, weather/localization scenarios, and authorized device labs.

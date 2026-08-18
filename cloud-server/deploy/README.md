@@ -1,6 +1,6 @@
 # Private Deployment
 
-This directory provides a single-node HTTPS deployment for an Enterprise customer. Caddy obtains and renews public TLS certificates, while the sync service stays on an internal Docker network with no host port.
+This directory provides a single-node HTTPS deployment. Caddy obtains and renews public TLS certificates, while the sync service stays on an internal Docker network with no host port.
 
 ## Prerequisites
 

@@ -5,7 +5,7 @@ Version 2.0.0
 - Added multi-point routes, speed, stops, and loops
 - Added GPX/KML import and export
 - Added history, joystick controls, and encrypted sync
-- Added one-time Pro purchase and enterprise QA automation
+- Added ADB QA automation for multi-device location tests
 - Added a sample route preview and step-by-step mock-location setup
 - Improved map clarity, Android 15 support, and localization
 - Added restorable cross-time-zone enterprise suites

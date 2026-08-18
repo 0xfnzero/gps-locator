@@ -21,9 +21,6 @@ import com.gpsupdater.app.databinding.DialogWaypointBinding
 import com.gpsupdater.app.model.Coordinates
 import com.gpsupdater.app.location.MockLocationPreferences
 import com.gpsupdater.app.geocoding.MapServiceConfiguration
-import com.gpsupdater.app.product.EntitlementRepository
-import com.gpsupdater.app.product.ProductFeature
-import com.gpsupdater.app.product.ProUpgradeActivity
 import org.osmdroid.config.Configuration
 import org.osmdroid.events.MapEventsReceiver
 import org.osmdroid.util.BoundingBox
@@ -36,7 +33,6 @@ import org.osmdroid.views.overlay.Polyline
 class RouteEditorActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRouteEditorBinding
     private val repository by lazy { RouteRepository(this) }
-    private val entitlementRepository by lazy { EntitlementRepository(this) }
     private val waypoints = mutableListOf<RouteWaypoint>()
     private val routeOverlays = mutableListOf<Overlay>()
     private var editingRouteId: String? = null
@@ -93,14 +89,12 @@ class RouteEditorActivity : AppCompatActivity() {
         configureControls()
         configureFloatingControls()
         binding.routeNameInput.setText(getString(R.string.new_route_name))
-        renderProductAccess()
         updateEditorState()
     }
 
     override fun onResume() {
         super.onResume()
         binding.map.onResume()
-        renderProductAccess()
     }
 
     override fun onPause() {
@@ -259,9 +253,6 @@ class RouteEditorActivity : AppCompatActivity() {
             showMessage(getString(R.string.route_requires_points))
             return
         }
-        if (!requirePro(ProductFeature.ROUTE_SIMULATION, R.string.route_preview_ready_message)) {
-            return
-        }
         repository.save(route)
         setResult(
             RESULT_OK,
@@ -344,10 +335,8 @@ class RouteEditorActivity : AppCompatActivity() {
             .setItems(options) { _, index ->
                 when (index) {
                     0 -> {
-                        if (requirePro(ProductFeature.ROUTE_SIMULATION)) {
-                            setResult(RESULT_OK, Intent().putExtra(EXTRA_ROUTE_ID, route.id))
-                            finish()
-                        }
+                        setResult(RESULT_OK, Intent().putExtra(EXTRA_ROUTE_ID, route.id))
+                        finish()
                     }
 
                     1 -> loadRoute(route)
@@ -361,7 +350,6 @@ class RouteEditorActivity : AppCompatActivity() {
     }
 
     private fun importRoute() {
-        if (!requirePro(ProductFeature.FILE_IMPORT_EXPORT)) return
         importDocumentLauncher.launch(
             arrayOf(
                 "application/gpx+xml",
@@ -374,7 +362,6 @@ class RouteEditorActivity : AppCompatActivity() {
     }
 
     private fun exportRoute(route: SimulationRoute, format: LocationDocumentFormat) {
-        if (!requirePro(ProductFeature.FILE_IMPORT_EXPORT)) return
         pendingExportContent = LocationDocumentCodec.export(route, format)
         val extension = if (format == LocationDocumentFormat.GPX) "gpx" else "kml"
         val safeName = route.name.replace(Regex("[^A-Za-z0-9._-]"), "_").ifBlank { "route" }
@@ -414,31 +401,6 @@ class RouteEditorActivity : AppCompatActivity() {
                 }
             }
             .show()
-    }
-
-    private fun renderProductAccess() {
-        val canRunRoutes = entitlementRepository.canUse(ProductFeature.ROUTE_SIMULATION)
-        binding.previewText.visibility = if (canRunRoutes) View.GONE else View.VISIBLE
-        binding.saveStartButton.setText(
-            if (canRunRoutes) R.string.save_and_start_route
-            else R.string.unlock_and_start_route,
-        )
-    }
-
-    private fun requirePro(
-        feature: ProductFeature,
-        message: Int = R.string.pro_required_message,
-    ): Boolean {
-        if (entitlementRepository.canUse(feature)) return true
-        MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.pro_required)
-            .setMessage(message)
-            .setNegativeButton(R.string.continue_editing, null)
-            .setPositiveButton(R.string.view_pro) { _, _ ->
-                startActivity(Intent(this, ProUpgradeActivity::class.java))
-            }
-            .show()
-        return false
     }
 
     private fun showMessage(message: String) {

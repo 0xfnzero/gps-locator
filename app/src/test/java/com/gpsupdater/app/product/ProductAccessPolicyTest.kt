@@ -7,48 +7,13 @@ import org.junit.Test
 
 class ProductAccessPolicyTest {
     @Test
-    fun freeTier_keepsCoreLocationFeatures() {
-        assertTrue(ProductAccessPolicy.canUse(ProductTier.FREE, ProductFeature.BASIC_LOCATION))
-        assertTrue(ProductAccessPolicy.canUse(ProductTier.FREE, ProductFeature.REGION_SEARCH))
-        assertTrue(ProductAccessPolicy.canUse(ProductTier.FREE, ProductFeature.FAVORITES))
-        assertEquals(5, ProductAccessPolicy.favoriteLimit(ProductTier.FREE))
-    }
-
-    @Test
-    fun proFeatures_areUnavailableToFreeAndAvailableToPro() {
-        val proFeatures = listOf(
-            ProductFeature.FAVORITE_GROUPS,
-            ProductFeature.LOCATION_HISTORY,
-            ProductFeature.ROUTE_SIMULATION,
-            ProductFeature.ROUTE_LOOP,
-            ProductFeature.FILE_IMPORT_EXPORT,
-            ProductFeature.JOYSTICK,
-            ProductFeature.CLOUD_SYNC,
-        )
-
-        proFeatures.forEach { feature ->
-            assertFalse("$feature must not be available to Free", ProductAccessPolicy.canUse(ProductTier.FREE, feature))
-            assertTrue("$feature must be available to Pro", ProductAccessPolicy.canUse(ProductTier.PRO, feature))
+    fun everyTier_hasFullAccess() {
+        ProductTier.entries.forEach { tier ->
+            ProductFeature.entries.forEach { feature ->
+                assertTrue("$feature must be available to $tier", ProductAccessPolicy.canUse(tier, feature))
+            }
+            assertEquals(Int.MAX_VALUE, ProductAccessPolicy.favoriteLimit(tier))
         }
-        assertEquals(Int.MAX_VALUE, ProductAccessPolicy.favoriteLimit(ProductTier.PRO))
-    }
-
-    @Test
-    fun enterpriseFeatures_areUnavailableToProAndAvailableToEnterprise() {
-        val enterpriseFeatures = listOf(
-            ProductFeature.TEAM_SCENARIOS,
-            ProductFeature.DEVICE_FLEET,
-            ProductFeature.TEST_REPORTS,
-        )
-
-        enterpriseFeatures.forEach { feature ->
-            assertFalse("$feature must not be available to Pro", ProductAccessPolicy.canUse(ProductTier.PRO, feature))
-            assertTrue(
-                "$feature must be available to Enterprise",
-                ProductAccessPolicy.canUse(ProductTier.ENTERPRISE, feature),
-            )
-        }
-        assertEquals(Int.MAX_VALUE, ProductAccessPolicy.favoriteLimit(ProductTier.ENTERPRISE))
     }
 
     @Test

@@ -12,9 +12,9 @@ Crea escenarios de ubicación repetibles sin mover físicamente el dispositivo:
 - Ajusta una ubicación activa con controles de precisión métrica
 - Protege favoritos, rutas e historial con copias cifradas de extremo a extremo
 
-La versión gratuita incluye selección mediante mapa y coordenadas, búsqueda regional, ubicación simulada básica y hasta cinco ubicaciones guardadas. También permite cargar una ruta de ejemplo y probar el editor antes de actualizar. Localizador GPS Pro es una compra única que desbloquea ubicaciones ilimitadas, simulación de rutas, intercambio GPX/KML y plantillas de equipo, historial, joystick y sincronización cifrada. La aplicación no contiene publicidad.
+La aplicación es de código abierto y gratuita. Incluye selección mediante mapa y coordenadas, búsqueda regional, ubicaciones ilimitadas, simulación de rutas, intercambio GPX/KML y plantillas de equipo, historial, joystick y sincronización cifrada. No contiene publicidad.
 
-Los equipos empresariales pueden usar la herramienta ADB para ejecutar escenarios multidispositivo, pruebas verificadas entre zonas horarias e informes JSON/JUnit. Cada suite restaura la zona horaria original. La automatización necesita una licencia firmada y acceso autorizado a Android Shell.
+La herramienta ADB puede ejecutar escenarios multidispositivo, pruebas verificadas entre zonas horarias e informes JSON/JUnit. Cada suite restaura la zona horaria original. La automatización necesita acceso autorizado a Android Shell.
 
 La configuración requiere las Opciones de desarrollador de Android. Selecciona Localizador GPS en «Seleccionar aplicación de ubicación simulada» antes de iniciar. Mientras la simulación está activa se muestra una notificación permanente con una acción para detenerla.
 

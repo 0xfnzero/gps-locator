@@ -183,8 +183,6 @@ function renderDeviceStatus(container, device) {
       licenseExpiry(device.enterprise.expiresAt),
     ].join(" · ");
     container.append(element("span", "device-license", license));
-  } else if (!device.debug) {
-    container.append(element("span", "device-warning", "No Enterprise license installed"));
   }
 }
 

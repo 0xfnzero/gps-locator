@@ -1,0 +1,34 @@
+name: Bug report
+description: Report a problem with GPS Locator
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: Thanks for helping improve this open-source mock-location tool.
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: Describe the unexpected behavior.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1.
+        2.
+        3.
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: GPS Locator version
+      placeholder: 2.0.0
+  - type: input
+    id: android
+    attributes:
+      label: Android version and device
+      placeholder: Android 15 emulator / Pixel 8

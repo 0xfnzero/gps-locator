@@ -50,29 +50,9 @@ object EntitlementOwnershipPolicy {
 }
 
 object ProductAccessPolicy {
-    private val freeFeatures = setOf(
-        ProductFeature.BASIC_LOCATION,
-        ProductFeature.REGION_SEARCH,
-        ProductFeature.FAVORITES,
-    )
-    private val proFeatures = freeFeatures + setOf(
-        ProductFeature.FAVORITE_GROUPS,
-        ProductFeature.LOCATION_HISTORY,
-        ProductFeature.ROUTE_SIMULATION,
-        ProductFeature.ROUTE_LOOP,
-        ProductFeature.FILE_IMPORT_EXPORT,
-        ProductFeature.JOYSTICK,
-        ProductFeature.CLOUD_SYNC,
-    )
+    @Suppress("UNUSED_PARAMETER")
+    fun canUse(tier: ProductTier, feature: ProductFeature): Boolean = true
 
-    fun canUse(tier: ProductTier, feature: ProductFeature): Boolean = when (tier) {
-        ProductTier.FREE -> feature in freeFeatures
-        ProductTier.PRO -> feature in proFeatures
-        ProductTier.ENTERPRISE -> true
-    }
-
-    fun favoriteLimit(tier: ProductTier): Int = when (tier) {
-        ProductTier.FREE -> 5
-        ProductTier.PRO, ProductTier.ENTERPRISE -> Int.MAX_VALUE
-    }
+    @Suppress("UNUSED_PARAMETER")
+    fun favoriteLimit(tier: ProductTier): Int = Int.MAX_VALUE
 }

@@ -32,10 +32,6 @@ export function assessDeviceStatus(record) {
   if (!record.mockLocationReady) {
     return { commandReady: false, readiness: deviceReadiness.SETUP_REQUIRED };
   }
-  const enterpriseReady = record.tier === "enterprise" && record.enterprise?.active === true;
-  if (!record.debug && !enterpriseReady) {
-    return { commandReady: false, readiness: deviceReadiness.LICENSE_REQUIRED };
-  }
   return {
     commandReady: true,
     readiness: record.simulationActive

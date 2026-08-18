@@ -32,7 +32,7 @@ docker run -p 8787:8787 -v gps-sync-data:/data gps-updater-sync
 
 Production deployments must place the service behind an HTTPS reverse proxy. The Android app rejects non-HTTPS endpoints. Back up the `/data` volume and restrict direct access to port 8787. Set `TRUST_PROXY=true` only when direct access is blocked and the proxy replaces, rather than appends untrusted values to, `X-Forwarded-For`. Run one server process/replica for each filesystem `DATA_DIR`; the per-snapshot lock is in-process. A multi-replica deployment needs shared conditional storage or distributed locking rather than a shared filesystem volume alone.
 
-For an Enterprise single-node deployment with automatic HTTPS, an internal backend network, header-redacted proxy logs, persistent volumes, health checks, and guarded backup/restore tools, use [`deploy/README.md`](deploy/README.md).
+For a single-node deployment with automatic HTTPS, an internal backend network, header-redacted proxy logs, persistent volumes, health checks, and guarded backup/restore tools, use [`deploy/README.md`](deploy/README.md).
 
 `GET /health` is a liveness probe. `GET /ready` creates and removes a protected temporary file in `DATA_DIR`, returning HTTP 503 if persistent storage is not writable.
 
