@@ -1,48 +1,61 @@
 # GPS Locator
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Release](https://img.shields.io/github/v/release/0xfnzero/gps-locator)](https://github.com/0xfnzero/gps-locator/releases)
 [![Platform](https://img.shields.io/badge/platform-Android%208%2B-3DDC84.svg)](https://github.com/0xfnzero/gps-locator/releases)
 [![API](https://img.shields.io/badge/API-26%2B-blue.svg)](app/build.gradle.kts)
 [![Kotlin](https://img.shields.io/badge/language-Kotlin-7F52FF.svg)](https://kotlinlang.org/)
-[![Release](https://img.shields.io/github/v/release/0xfnzero/gps-locator)](https://github.com/0xfnzero/gps-locator/releases)
 
-Open-source **Android mock location** / **fake GPS** tool for developers and QA. Simulate a single point, search 200+ countries, replay GPX/KML routes, sync encrypted backups, and drive a device fleet over ADB.
+Open-source **Android mock location** / **fake GPS** app for developers and QA.
 
-[中文说明](README.zh-CN.md) · [Releases](https://github.com/0xfnzero/gps-locator/releases) · [Contributing](CONTRIBUTING.md)
+Set a point on the map, search 200+ countries, replay **GPX/KML** routes, back up data with end-to-end encryption, and drive a device fleet over **ADB**. No ads, no in-app purchases, no paid unlocks.
 
-## Why GPS Locator
+[中文说明](README.zh-CN.md) · [Download APK](https://github.com/0xfnzero/gps-locator/releases/latest) · [Contributing](CONTRIBUTING.md)
 
-GPS Locator is a developer mock GPS app, not a commercial fake-location product. Every feature is free and included in the source:
+<p align="center">
+  <img src="store-listing/assets/feature-graphic.png" alt="GPS Locator open-source Android mock location and fake GPS map" width="1024">
+</p>
 
-- OpenStreetMap map picker with tap, drag, zoom, and coordinate input
-- Country / city / district search across 200+ regions
-- Saved locations, groups, history, and meter-level joystick
-- Multi-point route simulation with speed, stops, and loops
-- GPX / KML import and export, plus team template JSON
-- Optional end-to-end encrypted cloud backup
-- ADB CLI and local control center for multi-device QA
+<p align="center">
+  <img src="store-listing/assets/phone/en-US/01-map-selection.png" alt="Android mock GPS map picker with latitude and longitude" width="180">
+  <img src="store-listing/assets/phone/en-US/02-region-search.png" alt="Country, city, and district location search" width="180">
+  <img src="store-listing/assets/phone/en-US/03-saved-locations.png" alt="Saved mock locations with groups" width="180">
+  <img src="store-listing/assets/phone/en-US/04-route-editor.png" alt="Multi-point GPX KML route editor" width="180">
+</p>
 
-Use it to test maps, logistics, weather, localization, and other location-aware apps on devices you are authorized to test. It does not hide Android mock-location state or bypass another app’s security checks.
+## Features
+
+- **Mock GPS on Android 8+** without root: tap the OpenStreetMap map, drag, zoom, or type WGS84 coordinates
+- **Region search** by country, city, and district across 200+ countries and regions
+- **Saved locations** with groups, search, history, and meter-level joystick
+- **Route simulation** with speed, waypoint stops, loops, and a sample route
+- **GPX and KML** import/export, plus JSON team templates for sharing locations and routes
+- **Encrypted sync** for optional self-hosted backups (AES-256-GCM on device)
+- **ADB lab CLI** and a localhost control center for multi-device QA, time zones, and JSON/JUnit reports
+- **Languages:** follow system, Simplified Chinese, English, Japanese, Spanish
+
+Use it to test maps, logistics, weather, localization, and other location-aware apps on devices you are authorized to test. GPS Locator does **not** hide Android’s mock-location flag or bypass another app’s security checks.
 
 ## Install
 
-Download the latest APK from [GitHub Releases](https://github.com/0xfnzero/gps-locator/releases).
+1. Download [`gps-locator-2.0.0.apk`](https://github.com/0xfnzero/gps-locator/releases/download/v2.0.0/gps-locator-2.0.0.apk) from [Releases](https://github.com/0xfnzero/gps-locator/releases).
+2. On the phone or emulator, enable **Developer options**.
+3. Open **Select mock location app** and choose **GPS Locator**.
+4. Allow location and notification permissions, then tap **Start**.
 
-1. Enable Developer options on the Android device.
-2. Open **Select mock location app** and choose **GPS Locator**.
-3. Grant location and notification permissions, then start a simulation.
+If the app is missing from the mock-location list, install 2.0.0 or newer, launch it once, then leave and re-enter Developer options.
 
-If the app does not appear in the mock-location list, install 2.0.0 or newer, launch it once, then leave and re-enter Developer options.
+The GitHub APK is signed with the Android debug key so it can be installed locally. A Play Store upload should use your own production keystore.
 
 ## Build from source
 
-Requires Android Studio Ladybug+, JDK 17, and Android SDK 35.
+Needs Android Studio Ladybug or newer, **JDK 17**, and Android SDK 35.
 
 ```bash
 ./gradlew assembleRelease
 ```
 
-The signed APK is written to `app/build/outputs/apk/release/app-release.apk`. Without `GPS_UPLOAD_*` secrets the Release build is signed with the Android debug key so you can install it locally.
+APK output: `app/build/outputs/apk/release/app-release.apk`.
 
 ```bash
 ./gradlew testDebugUnitTest lintDebug
@@ -50,16 +63,17 @@ The signed APK is written to `app/build/outputs/apk/release/app-release.apk`. Wi
 (cd cloud-server && npm test)
 ```
 
-## Optional services
+## Repository layout
 
-| Path | What it is |
+| Path | Description |
 | --- | --- |
-| [`desktop-cli`](desktop-cli/README.md) | ADB lab CLI, local web control center, scenario suites, JSON/JUnit reports |
-| [`cloud-server`](cloud-server/README.md) | Self-hosted encrypted backup server with Caddy HTTPS deploy pack |
-| [`store-listing`](store-listing/README.md) | Optional Play Store listing copy and screenshot tools |
+| [`app/`](app/) | Android mock location / fake GPS application |
+| [`desktop-cli/`](desktop-cli/README.md) | ADB CLI, local web control center, scenario suites, reports |
+| [`cloud-server/`](cloud-server/README.md) | Self-hosted encrypted backup server and Caddy HTTPS pack |
+| [`store-listing/`](store-listing/README.md) | Optional Play Store copy, screenshots, and validators |
 | [`docs/PRIVACY_POLICY.md`](docs/PRIVACY_POLICY.md) | Privacy policy template |
 
-Map tiles default to public OpenStreetMap / Nominatim. For heavier use, point the build at your own tile and geocoding endpoints:
+Map tiles default to public OpenStreetMap / Nominatim. For heavier traffic, point the build at your own endpoints:
 
 ```bash
 GPS_TILE_URL_TEMPLATE='https://tiles.example.com/{z}/{x}/{y}.png' \
@@ -70,9 +84,20 @@ GPS_SUPPORT_EMAIL='support@example.com' \
 ./gradlew assembleRelease
 ```
 
-## Topics
+## FAQ
 
-`android` `gps` `mock-location` `fake-gps` `location-simulator` `qa` `testing` `adb` `openstreetmap` `gpx` `kml` `kotlin`
+**Does this hide mock location from other apps?**  
+No. Android still reports a mock provider. Banking, payment, ride-hailing, and game apps may reject it.
+
+**Do I need root or a Google Play purchase?**  
+No. All features are included. ADB control needs a privileged `adb` / `DUMP` shell, not a paid license.
+
+**Which coordinate system is used?**  
+WGS84, matching Android Location APIs and OpenStreetMap. Some mainland China maps use GCJ-02 and can show an offset of a few hundred meters.
+
+## Contributing
+
+Bug reports and pull requests are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md). Please do not reintroduce ads, billing, or paid feature gates.
 
 ## License
 

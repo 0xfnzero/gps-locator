@@ -1,41 +1,92 @@
 # GPS 定位器
 
-开源 Android **模拟位置** / **假 GPS** 工具，面向开发和 QA。支持单点选点、全球地区检索、GPX/KML 路线回放、加密备份，以及 ADB 多设备控制。
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Release](https://img.shields.io/github/v/release/0xfnzero/gps-locator)](https://github.com/0xfnzero/gps-locator/releases)
+[![Platform](https://img.shields.io/badge/platform-Android%208%2B-3DDC84.svg)](https://github.com/0xfnzero/gps-locator/releases)
 
-全部功能免费开放，没有付费解锁或商业套餐。
+开源 Android **模拟位置** / **假 GPS** 应用，面向开发和 QA。
 
-[English README](README.md) · [发布页](https://github.com/0xfnzero/gps-locator/releases)
+在地图上选点、检索 200 多个国家和地区、回放 **GPX/KML** 路线、端到端加密备份，以及通过 **ADB** 控制多台设备。无广告、无内购、无付费解锁。
+
+[English README](README.md) · [下载 APK](https://github.com/0xfnzero/gps-locator/releases/latest) · [参与贡献](CONTRIBUTING.md)
+
+<p align="center">
+  <img src="store-listing/assets/feature-graphic.png" alt="GPS 定位器开源 Android 模拟位置地图" width="1024">
+</p>
+
+<p align="center">
+  <img src="store-listing/assets/phone/zh-CN/01-map-selection.png" alt="模拟位置地图选点与经纬度" width="180">
+  <img src="store-listing/assets/phone/zh-CN/02-region-search.png" alt="国家城市地区位置搜索" width="180">
+  <img src="store-listing/assets/phone/zh-CN/03-saved-locations.png" alt="收藏位置与分组" width="180">
+  <img src="store-listing/assets/phone/zh-CN/04-route-editor.png" alt="多点 GPX KML 路线编辑" width="180">
+</p>
 
 ## 功能
 
-- OpenStreetMap 地图拖动、缩放和点击选点
-- 覆盖 200 多个国家和地区，支持国家、城市与地区检索
-- 简体中文、English、日本語、Español 和跟随系统语言
-- 收藏、分组、搜索、历史和米级摇杆微调
-- 多点路线、速度、途经点停留和循环模拟
-- GPX/KML 导入导出与团队模板交换
-- 可选的端到端加密云备份
-- 本机 Web 控制台、ADB 多设备控制和 JSON/JUnit 报告
+- **Android 8+ 模拟 GPS**，无需 Root：OpenStreetMap 点击、拖动、缩放或输入 WGS84 坐标
+- **地区检索**：国家、城市、地区，覆盖 200 多个国家和地区
+- **收藏位置**：分组、搜索、历史、米级摇杆微调
+- **路线模拟**：速度、途经点停留、循环，以及示例路线
+- **GPX / KML** 导入导出，以及用于共享收藏和路线的团队模板
+- **加密同步**：可选的自建备份（设备端 AES-256-GCM）
+- **ADB 实验室 CLI** 和本机控制台：多设备 QA、时区、JSON/JUnit 报告
+- **语言**：跟随系统、简体中文、English、日本語、Español
 
-部分银行、支付、出行和游戏 App 会拒绝模拟位置，这是目标 App 的安全策略。请只在自己有权测试的设备和应用中使用。
+请只在自己有权测试的设备和应用中使用。本工具**不会**隐藏 Android 的模拟位置状态，也不会绕过其他应用的安全检查。部分银行、支付、出行和游戏 App 会拒绝模拟位置。
 
 ## 安装
 
-从 [GitHub Releases](https://github.com/0xfnzero/gps-locator/releases) 下载 APK。
+1. 从 [Releases](https://github.com/0xfnzero/gps-locator/releases) 下载 [`gps-locator-2.0.0.apk`](https://github.com/0xfnzero/gps-locator/releases/download/v2.0.0/gps-locator-2.0.0.apk)。
+2. 在真机或模拟器中打开**开发者选项**。
+3. 在「选择模拟位置信息应用」中选择 **GPS 定位器**。
+4. 允许位置和通知权限，然后点击「开始」。
 
-1. 打开开发者选项。
-2. 在“选择模拟位置信息应用”中选择“GPS 定位器”。
-3. 允许位置和通知权限后开始模拟。
+如果列表里没有本应用，请安装 2.0.0 或更新版本，先启动一次 App，再退出并重新进入开发者选项。
+
+GitHub 提供的 APK 使用 Android debug 签名，便于本机安装。上架 Play 时请使用你自己的生产密钥。
 
 ## 从源码构建
 
-需要 Android Studio Ladybug 或更新版本、JDK 17、Android SDK 35。
+需要 Android Studio Ladybug 或更新版本、**JDK 17**、Android SDK 35。
 
 ```bash
 ./gradlew assembleRelease
 ```
 
-APK 位于 `app/build/outputs/apk/release/app-release.apk`。
+产物路径：`app/build/outputs/apk/release/app-release.apk`。
+
+```bash
+./gradlew testDebugUnitTest lintDebug
+(cd desktop-cli && npm test)
+(cd cloud-server && npm test)
+```
+
+## 仓库结构
+
+| 路径 | 说明 |
+| --- | --- |
+| [`app/`](app/) | Android 模拟位置应用 |
+| [`desktop-cli/`](desktop-cli/README.md) | ADB 命令行、本机控制台、场景套件和报告 |
+| [`cloud-server/`](cloud-server/README.md) | 自建加密备份服务与 Caddy HTTPS 部署包 |
+| [`store-listing/`](store-listing/README.md) | 可选的 Play 文案、截图和校验工具 |
+| [`docs/PRIVACY_POLICY.md`](docs/PRIVACY_POLICY.md) | 隐私政策模板 |
+
+地图默认使用公共 OpenStreetMap / Nominatim。访问量大时请改为自建瓦片和地理编码服务。
+
+## 常见问题
+
+**会不会对其他 App 隐藏模拟位置？**  
+不会。Android 仍会报告 mock provider。银行、支付、出行和游戏应用可能直接拒绝。
+
+**需要 Root 或付费吗？**  
+不需要。全部功能开源免费。ADB 控制需要有权限的 `adb` / `DUMP` shell，不需要付费许可证。
+
+**坐标系是什么？**  
+WGS84，与 Android Location API 和 OpenStreetMap 一致。中国大陆部分商业地图使用 GCJ-02，对照时可能有数百米偏移。
+
+## 参与贡献
+
+欢迎提交 issue 和 pull request，详见 [CONTRIBUTING.md](CONTRIBUTING.md)。请不要重新加入广告、内购或付费功能门槛。
 
 ## 许可证
 
