@@ -1,10 +1,11 @@
-# GPS 定位器
+# GPS 定位器：Android 模拟位置 / 假 GPS
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Release](https://img.shields.io/github/v/release/0xfnzero/gps-locator)](https://github.com/0xfnzero/gps-locator/releases)
+[![Downloads](https://img.shields.io/github/downloads/0xfnzero/gps-locator/total)](https://github.com/0xfnzero/gps-locator/releases)
 [![Platform](https://img.shields.io/badge/platform-Android%208%2B-3DDC84.svg)](https://github.com/0xfnzero/gps-locator/releases)
 
-开源 Android **模拟位置** / **假 GPS** 应用，面向开发和 QA。
+开源 Android **模拟位置** / **假 GPS** / **位置模拟器**，面向开发和 QA。
 
 在地图上选点、检索 200 多个国家和地区、回放 **GPX/KML** 路线、端到端加密备份，以及通过 **ADB** 控制多台设备。无广告、无内购、无付费解锁。
 
@@ -21,7 +22,7 @@
   <img src="store-listing/assets/phone/zh-CN/04-route-editor.png" alt="多点 GPX KML 路线编辑" width="180">
 </p>
 
-## 功能
+## Android 模拟位置功能
 
 - **Android 8+ 模拟 GPS**，无需 Root：OpenStreetMap 点击、拖动、缩放或输入 WGS84 坐标
 - **地区检索**：国家、城市、地区，覆盖 200 多个国家和地区
@@ -34,7 +35,7 @@
 
 请只在自己有权测试的设备和应用中使用。本工具**不会**隐藏 Android 的模拟位置状态，也不会绕过其他应用的安全检查。部分银行、支付、出行和游戏 App 会拒绝模拟位置。
 
-## 安装
+## 安装 APK
 
 1. 从 [Releases](https://github.com/0xfnzero/gps-locator/releases) 下载 [`gps-locator-2.0.0.apk`](https://github.com/0xfnzero/gps-locator/releases/download/v2.0.0/gps-locator-2.0.0.apk)。
 2. 在真机或模拟器中打开**开发者选项**。
@@ -71,7 +72,16 @@ GitHub 提供的 APK 使用 Android debug 签名，便于本机安装。上架 P
 | [`store-listing/`](store-listing/README.md) | 可选的 Play 文案、截图和校验工具 |
 | [`docs/PRIVACY_POLICY.md`](docs/PRIVACY_POLICY.md) | 隐私政策模板 |
 
-地图默认使用公共 OpenStreetMap / Nominatim。访问量大时请改为自建瓦片和地理编码服务。
+地图默认使用公共 OpenStreetMap / Nominatim。访问量大时请改为自建瓦片和地理编码服务：
+
+```bash
+GPS_TILE_URL_TEMPLATE='https://tiles.example.com/{z}/{x}/{y}.png' \
+GPS_GEOCODING_BASE_URL='https://geocode.example.com' \
+GPS_MAP_ATTRIBUTION='© Your map provider' \
+GPS_PRIVACY_POLICY_URL='https://example.com/privacy/gps-locator' \
+GPS_SUPPORT_EMAIL='support@example.com' \
+./gradlew assembleRelease
+```
 
 ## 常见问题
 

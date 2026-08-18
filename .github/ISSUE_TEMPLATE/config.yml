@@ -1,1 +1,5 @@
 blank_issues_enabled: true
+contact_links:
+  - name: Download APK
+    url: https://github.com/0xfnzero/gps-locator/releases/latest
+    about: Get the latest GPS Locator mock location APK.

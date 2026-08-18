@@ -1,12 +1,13 @@
-# GPS Locator
+# GPS Locator: Android Mock Location & Fake GPS
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Release](https://img.shields.io/github/v/release/0xfnzero/gps-locator)](https://github.com/0xfnzero/gps-locator/releases)
+[![Downloads](https://img.shields.io/github/downloads/0xfnzero/gps-locator/total)](https://github.com/0xfnzero/gps-locator/releases)
 [![Platform](https://img.shields.io/badge/platform-Android%208%2B-3DDC84.svg)](https://github.com/0xfnzero/gps-locator/releases)
 [![API](https://img.shields.io/badge/API-26%2B-blue.svg)](app/build.gradle.kts)
 [![Kotlin](https://img.shields.io/badge/language-Kotlin-7F52FF.svg)](https://kotlinlang.org/)
 
-Open-source **Android mock location** / **fake GPS** app for developers and QA.
+Open-source **Android mock location** / **fake GPS** / **location simulator** for developers and QA.
 
 Set a point on the map, search 200+ countries, replay **GPX/KML** routes, back up data with end-to-end encryption, and drive a device fleet over **ADB**. No ads, no in-app purchases, no paid unlocks.
 
@@ -23,7 +24,7 @@ Set a point on the map, search 200+ countries, replay **GPX/KML** routes, back u
   <img src="store-listing/assets/phone/en-US/04-route-editor.png" alt="Multi-point GPX KML route editor" width="180">
 </p>
 
-## Features
+## Android mock location features
 
 - **Mock GPS on Android 8+** without root: tap the OpenStreetMap map, drag, zoom, or type WGS84 coordinates
 - **Region search** by country, city, and district across 200+ countries and regions
@@ -36,7 +37,7 @@ Set a point on the map, search 200+ countries, replay **GPX/KML** routes, back u
 
 Use it to test maps, logistics, weather, localization, and other location-aware apps on devices you are authorized to test. GPS Locator does **not** hide Android’s mock-location flag or bypass another app’s security checks.
 
-## Install
+## Install the APK
 
 1. Download [`gps-locator-2.0.0.apk`](https://github.com/0xfnzero/gps-locator/releases/download/v2.0.0/gps-locator-2.0.0.apk) from [Releases](https://github.com/0xfnzero/gps-locator/releases).
 2. On the phone or emulator, enable **Developer options**.
@@ -84,7 +85,7 @@ GPS_SUPPORT_EMAIL='support@example.com' \
 ./gradlew assembleRelease
 ```
 
-## FAQ
+## Mock location FAQ
 
 **Does this hide mock location from other apps?**  
 No. Android still reports a mock provider. Banking, payment, ride-hailing, and game apps may reject it.
