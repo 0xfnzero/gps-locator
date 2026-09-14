@@ -1,17 +1,32 @@
-# GPS Locator: Android Mock Location & Fake GPS
+<div align="center">
+  <h1>📍 GPS Locator</h1>
+  <h3><em>Open-source Android mock location and route simulation</em></h3>
+</div>
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Release](https://img.shields.io/github/v/release/0xfnzero/gps-locator)](https://github.com/0xfnzero/gps-locator/releases)
-[![Downloads](https://img.shields.io/github/downloads/0xfnzero/gps-locator/total)](https://github.com/0xfnzero/gps-locator/releases)
-[![Platform](https://img.shields.io/badge/platform-Android%208%2B-3DDC84.svg)](https://github.com/0xfnzero/gps-locator/releases)
-[![API](https://img.shields.io/badge/API-26%2B-blue.svg)](app/build.gradle.kts)
-[![Kotlin](https://img.shields.io/badge/language-Kotlin-7F52FF.svg)](https://kotlinlang.org/)
+<p align="center">
+  <strong>Set a point on the map, search 200+ countries, replay GPX/KML routes, back up data with end-to-end encryption, and drive a device fleet over ADB. Built for developers and QA, with no ads, in-app purchases, or paid unlocks.</strong>
+</p>
 
-Open-source **Android mock location** / **fake GPS** / **location simulator** for developers and QA.
+<p align="center">
+  <a href="https://github.com/0xfnzero/gps-locator/releases"><img src="https://img.shields.io/github/v/release/0xfnzero/gps-locator" alt="Release"></a>
+  <a href="https://github.com/0xfnzero/gps-locator/releases"><img src="https://img.shields.io/github/downloads/0xfnzero/gps-locator/total" alt="Downloads"></a>
+  <a href="https://github.com/0xfnzero/gps-locator/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License"></a>
+  <a href="https://github.com/0xfnzero/gps-locator"><img src="https://img.shields.io/github/stars/0xfnzero/gps-locator?style=social" alt="GitHub stars"></a>
+  <a href="https://github.com/0xfnzero/gps-locator/network"><img src="https://img.shields.io/github/forks/0xfnzero/gps-locator?style=social" alt="GitHub forks"></a>
+</p>
 
-Set a point on the map, search 200+ countries, replay **GPX/KML** routes, back up data with end-to-end encryption, and drive a device fleet over **ADB**. No ads, no in-app purchases, no paid unlocks.
+<p align="center">
+  <img src="https://img.shields.io/badge/Android%208%2B-3DDC84?style=for-the-badge&amp;logo=android&amp;logoColor=white" alt="Android 8+">
+  <img src="https://img.shields.io/badge/Kotlin-7F52FF?style=for-the-badge&amp;logo=kotlin&amp;logoColor=white" alt="Kotlin">
+  <img src="https://img.shields.io/badge/OpenStreetMap-7EBC6F?style=for-the-badge&amp;logo=openstreetmap&amp;logoColor=white" alt="OpenStreetMap">
+</p>
 
-[中文说明](README.zh-CN.md) · [Download APK](https://github.com/0xfnzero/gps-locator/releases/latest) · [Contributing](CONTRIBUTING.md)
+<p align="center">
+  <a href="https://github.com/0xfnzero/gps-locator/blob/main/README.md">English</a> |
+  <a href="https://github.com/0xfnzero/gps-locator/blob/main/README.zh-CN.md">中文</a> |
+  <a href="https://discord.gg/2YzakxfyaC">Discord</a> |
+  <a href="https://t.me/open_fnzero">Telegram</a>
+</p>
 
 <p align="center">
   <img src="store-listing/assets/feature-graphic.png" alt="GPS Locator open-source Android mock location and fake GPS map" width="1024">

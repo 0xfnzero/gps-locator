@@ -1,15 +1,32 @@
-# GPS 定位器：Android 模拟位置 / 假 GPS
+<div align="center">
+  <h1>📍 GPS Locator</h1>
+  <h3><em>开源 Android 模拟位置与路线仿真工具</em></h3>
+</div>
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Release](https://img.shields.io/github/v/release/0xfnzero/gps-locator)](https://github.com/0xfnzero/gps-locator/releases)
-[![Downloads](https://img.shields.io/github/downloads/0xfnzero/gps-locator/total)](https://github.com/0xfnzero/gps-locator/releases)
-[![Platform](https://img.shields.io/badge/platform-Android%208%2B-3DDC84.svg)](https://github.com/0xfnzero/gps-locator/releases)
+<p align="center">
+  <strong>在地图上选点、检索 200 多个国家和地区、回放 GPX/KML 路线、端到端加密备份，以及通过 ADB 控制多台设备。面向开发和 QA，无广告、无内购、无付费解锁。</strong>
+</p>
 
-开源 Android **模拟位置** / **假 GPS** / **位置模拟器**，面向开发和 QA。
+<p align="center">
+  <a href="https://github.com/0xfnzero/gps-locator/releases"><img src="https://img.shields.io/github/v/release/0xfnzero/gps-locator" alt="Release"></a>
+  <a href="https://github.com/0xfnzero/gps-locator/releases"><img src="https://img.shields.io/github/downloads/0xfnzero/gps-locator/total" alt="Downloads"></a>
+  <a href="https://github.com/0xfnzero/gps-locator/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License"></a>
+  <a href="https://github.com/0xfnzero/gps-locator"><img src="https://img.shields.io/github/stars/0xfnzero/gps-locator?style=social" alt="GitHub stars"></a>
+  <a href="https://github.com/0xfnzero/gps-locator/network"><img src="https://img.shields.io/github/forks/0xfnzero/gps-locator?style=social" alt="GitHub forks"></a>
+</p>
 
-在地图上选点、检索 200 多个国家和地区、回放 **GPX/KML** 路线、端到端加密备份，以及通过 **ADB** 控制多台设备。无广告、无内购、无付费解锁。
+<p align="center">
+  <img src="https://img.shields.io/badge/Android%208%2B-3DDC84?style=for-the-badge&amp;logo=android&amp;logoColor=white" alt="Android 8+">
+  <img src="https://img.shields.io/badge/Kotlin-7F52FF?style=for-the-badge&amp;logo=kotlin&amp;logoColor=white" alt="Kotlin">
+  <img src="https://img.shields.io/badge/OpenStreetMap-7EBC6F?style=for-the-badge&amp;logo=openstreetmap&amp;logoColor=white" alt="OpenStreetMap">
+</p>
 
-[English README](README.md) · [下载 APK](https://github.com/0xfnzero/gps-locator/releases/latest) · [参与贡献](CONTRIBUTING.md)
+<p align="center">
+  <a href="https://github.com/0xfnzero/gps-locator/blob/main/README.md">English</a> |
+  <a href="https://github.com/0xfnzero/gps-locator/blob/main/README.zh-CN.md">中文</a> |
+  <a href="https://discord.gg/2YzakxfyaC">Discord</a> |
+  <a href="https://t.me/open_fnzero">Telegram</a>
+</p>
 
 <p align="center">
   <img src="store-listing/assets/feature-graphic.png" alt="GPS 定位器开源 Android 模拟位置地图" width="1024">
