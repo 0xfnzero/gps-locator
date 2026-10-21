@@ -24,8 +24,9 @@
 <p align="center">
   <a href="https://github.com/0xfnzero/gps-locator/blob/main/README.md">English</a> |
   <a href="https://github.com/0xfnzero/gps-locator/blob/main/README.zh-CN.md">中文</a> |
-  <a href="https://discord.gg/2YzakxfyaC">Discord</a> |
-  <a href="https://t.me/open_fnzero">Telegram</a>
+  <a href="https://fnzero.dev/">Website</a> |
+  <a href="https://discord.gg/vuazbGkqQE">Discord</a> |
+  <a href="https://t.me/fnzero_group">Telegram</a>
 </p>
 
 <p align="center">
@@ -41,6 +42,8 @@
 
 ## Android mock location features
 
+The native Android UI uses [Material 3](https://m3.material.io/) with shared component styles, a map-first layout, labeled quick actions, and rounded location and route controls.
+
 - **Mock GPS on Android 8+** without root: tap the OpenStreetMap map, drag, zoom, or type WGS84 coordinates
 - **Region search** by country, city, and district across 200+ countries and regions
 - **Saved locations** with groups, search, history, and meter-level joystick
@@ -52,14 +55,16 @@
 
 Use it to test maps, logistics, weather, localization, and other location-aware apps on devices you are authorized to test. GPS Locator does **not** hide Android’s mock-location flag or bypass another app’s security checks.
 
+The offline region picker offers country → province/state → optional district/county → city/town, with searchable lists and bundled representative coordinates. It includes 250 countries/territories and over 150,000 cities/towns; district coverage varies (26 countries). Missing places can use the separate name-search entry. Region data is adapted from [Countries States Cities Database](https://github.com/dr5hn/countries-states-cities-database) under [ODbL 1.0](app/src/main/assets/regions/LICENSE-ODbL.txt), separately from the MIT-licensed app. See [data provenance and regeneration](app/src/main/assets/regions/README.md).
+
 ## Install the APK
 
-1. Download [`gps-locator-2.0.0.apk`](https://github.com/0xfnzero/gps-locator/releases/download/v2.0.0/gps-locator-2.0.0.apk) from [Releases](https://github.com/0xfnzero/gps-locator/releases).
+1. Download [`gps-locator-2.1.0.apk`](https://github.com/0xfnzero/gps-locator/releases/download/v2.1.0/gps-locator-2.1.0.apk) from [Releases](https://github.com/0xfnzero/gps-locator/releases).
 2. On the phone or emulator, enable **Developer options**.
 3. Open **Select mock location app** and choose **GPS Locator**.
 4. Allow location and notification permissions, then tap **Start**.
 
-If the app is missing from the mock-location list, install 2.0.0 or newer, launch it once, then leave and re-enter Developer options.
+If the app is missing from the mock-location list, install 2.1.0 or newer, launch it once, then leave and re-enter Developer options.
 
 The GitHub APK is signed with the Android debug key so it can be installed locally. A Play Store upload should use your own production keystore.
 

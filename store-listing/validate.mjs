@@ -9,7 +9,8 @@ const limits = {
   "title.txt": 30,
   "short_description.txt": 80,
   "full_description.txt": 4000,
-  "changelog-4.txt": 500
+  "changelog-4.txt": 500,
+  "changelog-5.txt": 500
 };
 
 const locales = ["en-US", "zh-CN", "ja-JP", "es-ES"];

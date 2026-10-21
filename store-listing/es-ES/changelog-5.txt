@@ -1,0 +1,1 @@
+Interfaz Material 3 renovada y mejoras en el mapa de rutas. Selecciona países, estados, condados y ciudades sin conexión, filtra listas y recupera tu última selección. Restaura puntos eliminados por error. Enlaces actualizados y capturas con ejemplos de EE. UU. La cobertura regional varía según el país.

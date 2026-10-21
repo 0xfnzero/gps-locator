@@ -24,8 +24,9 @@
 <p align="center">
   <a href="https://github.com/0xfnzero/gps-locator/blob/main/README.md">English</a> |
   <a href="https://github.com/0xfnzero/gps-locator/blob/main/README.zh-CN.md">中文</a> |
-  <a href="https://discord.gg/2YzakxfyaC">Discord</a> |
-  <a href="https://t.me/open_fnzero">Telegram</a>
+  <a href="https://fnzero.dev/">官网</a> |
+  <a href="https://discord.gg/vuazbGkqQE">Discord</a> |
+  <a href="https://t.me/fnzero_group">Telegram</a>
 </p>
 
 <p align="center">
@@ -41,6 +42,8 @@
 
 ## Android 模拟位置功能
 
+原生 Android 界面基于 [Material 3](https://m3.material.io/)，采用统一组件样式、地图主视图、带文字的快捷入口，以及圆角位置与路线控制面板。
+
 - **Android 8+ 模拟 GPS**，无需 Root：OpenStreetMap 点击、拖动、缩放或输入 WGS84 坐标
 - **地区检索**：国家、城市、地区，覆盖 200 多个国家和地区
 - **收藏位置**：分组、搜索、历史、米级摇杆微调
@@ -52,14 +55,16 @@
 
 请只在自己有权测试的设备和应用中使用。本工具**不会**隐藏 Android 的模拟位置状态，也不会绕过其他应用的安全检查。部分银行、支付、出行和游戏 App 会拒绝模拟位置。
 
+离线地区选择支持「国家 → 省／州 → 区县（可跳过）→ 城市／城镇」，直接点选定位，也可筛选列表名称。内置 250 个国家和地区、15 万多个城市／城镇；区县数据覆盖其中 26 个国家，未覆盖地点可通过独立的地名搜索入口查找。坐标为区域代表点，不是门牌地址。数据改编自 [Countries States Cities Database](https://github.com/dr5hn/countries-states-cities-database)，单独遵循 [ODbL 1.0](app/src/main/assets/regions/LICENSE-ODbL.txt)，应用代码仍使用 MIT 许可证。详见[数据来源与重新生成方式](app/src/main/assets/regions/README.md)。
+
 ## 安装 APK
 
-1. 从 [Releases](https://github.com/0xfnzero/gps-locator/releases) 下载 [`gps-locator-2.0.0.apk`](https://github.com/0xfnzero/gps-locator/releases/download/v2.0.0/gps-locator-2.0.0.apk)。
+1. 从 [Releases](https://github.com/0xfnzero/gps-locator/releases) 下载 [`gps-locator-2.1.0.apk`](https://github.com/0xfnzero/gps-locator/releases/download/v2.1.0/gps-locator-2.1.0.apk)。
 2. 在真机或模拟器中打开**开发者选项**。
 3. 在「选择模拟位置信息应用」中选择 **GPS 定位器**。
 4. 允许位置和通知权限，然后点击「开始」。
 
-如果列表里没有本应用，请安装 2.0.0 或更新版本，先启动一次 App，再退出并重新进入开发者选项。
+如果列表里没有本应用，请安装 2.1.0 或更新版本，先启动一次 App，再退出并重新进入开发者选项。
 
 GitHub 提供的 APK 使用 Android debug 签名，便于本机安装。上架 Play 时请使用你自己的生产密钥。
 

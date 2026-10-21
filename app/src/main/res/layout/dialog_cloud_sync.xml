@@ -12,10 +12,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/sync_endpoint"
-        app:boxCornerRadiusBottomEnd="8dp"
-        app:boxCornerRadiusBottomStart="8dp"
-        app:boxCornerRadiusTopEnd="8dp"
-        app:boxCornerRadiusTopStart="8dp">
+        app:boxCornerRadiusBottomEnd="16dp"
+        app:boxCornerRadiusBottomStart="16dp"
+        app:boxCornerRadiusTopEnd="16dp"
+        app:boxCornerRadiusTopStart="16dp">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/endpointInput"
@@ -33,10 +33,10 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:hint="@string/sync_key"
-        app:boxCornerRadiusBottomEnd="8dp"
-        app:boxCornerRadiusBottomStart="8dp"
-        app:boxCornerRadiusTopEnd="8dp"
-        app:boxCornerRadiusTopStart="8dp"
+        app:boxCornerRadiusBottomEnd="16dp"
+        app:boxCornerRadiusBottomStart="16dp"
+        app:boxCornerRadiusTopEnd="16dp"
+        app:boxCornerRadiusTopStart="16dp"
         app:endIconMode="password_toggle">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -82,7 +82,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/backupButton"
-            style="@style/Widget.Material3.Button"
+            style="@style/Widget.Gps.Button"
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:layout_marginEnd="5dp"
@@ -90,18 +90,18 @@
             android:text="@string/backup_now"
             android:textAllCaps="false"
             app:backgroundTint="@color/forest_700"
-            app:cornerRadius="8dp" />
+            app:cornerRadius="16dp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/restoreButton"
-            style="@style/Widget.Material3.Button.OutlinedButton"
+            style="@style/Widget.Gps.Button.Outlined"
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:layout_marginStart="5dp"
             android:layout_weight="1"
             android:text="@string/restore_now"
             android:textAllCaps="false"
-            app:cornerRadius="8dp" />
+            app:cornerRadius="16dp" />
     </LinearLayout>
 
     <com.google.android.material.button.MaterialButton

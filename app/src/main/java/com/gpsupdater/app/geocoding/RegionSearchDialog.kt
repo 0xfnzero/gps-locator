@@ -3,21 +3,24 @@ package com.gpsupdater.app.geocoding
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
+import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.view.inputmethod.EditorInfo
 import android.widget.ArrayAdapter
-import android.widget.BaseAdapter
-import android.widget.Filter
-import android.widget.Filterable
+import android.widget.LinearLayout
+import android.widget.ListView
 import android.widget.TextView
 import androidx.core.widget.doAfterTextChanged
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import com.gpsupdater.app.R
 import com.gpsupdater.app.databinding.DialogRegionSearchBinding
+import java.text.Collator
 import java.util.Locale
+import java.util.concurrent.Executors
 
+/** Offline browsing is the primary flow; free-text geocoding is an explicit fallback. */
 class RegionSearchDialog(
     private val context: Context,
     private val geocoder: GeocodingService,
@@ -25,296 +28,207 @@ class RegionSearchDialog(
 ) {
     fun show() {
         val binding = DialogRegionSearchBinding.inflate(LayoutInflater.from(context))
+        val directory = RegionDirectory(context)
         val locale = context.resources.configuration.locales[0]
-        val countries = CountryOption.localizedCountries(locale)
-        var selectedCountry = defaultCountry(countries)
-        val mainHandler = Handler(Looper.getMainLooper())
-        val countryAdapter = ArrayAdapter(
-            context,
-            android.R.layout.simple_dropdown_item_1line,
-            countries,
-        )
-        binding.countryInput.setAdapter(countryAdapter)
-        binding.countryInput.setText(selectedCountry.name, false)
-
-        val citySuggestionsAdapter = PlacesAdapter(context)
-        val districtSuggestionsAdapter = PlacesAdapter(context)
-        val resultsAdapter = PlacesAdapter(context)
-        binding.cityInput.setAdapter(citySuggestionsAdapter)
-        binding.districtInput.setAdapter(districtSuggestionsAdapter)
-        binding.resultsList.adapter = resultsAdapter
+        val countries = directory.countries()
+        val countryNames = countries.associate { country ->
+            val localized = Locale("", country.code).getDisplayCountry(locale)
+            country.code to localized.takeUnless { it.isBlank() || it == country.code }.orEmpty()
+                .ifBlank { country.name }
+        }
+        val preferences = context.getSharedPreferences("region_directory", Context.MODE_PRIVATE)
+        var country = countries.firstOrNull { it.code == preferences.getString("country", null) }
+            ?: countries.firstOrNull { it.code == Locale.getDefault().country }
+            ?: countries.first { it.code == "CN" }
+        var subdivisions = emptyList<RegionSubdivision>()
+        var state: RegionSubdivision? = null
+        var district: RegionPlace? = null
+        var city: RegionPlace? = null
+        var loading = false
+        var failed = false
+        var generation = 0
+        val executor = Executors.newSingleThreadExecutor()
+        val handler = Handler(Looper.getMainLooper())
         val dialog = MaterialAlertDialogBuilder(context)
             .setTitle(R.string.region_search)
             .setView(binding.root)
             .setNegativeButton(R.string.close, null)
+            .setNeutralButton(R.string.directory_keyword) { _, _ ->
+                PlaceKeywordSearchDialog(context, geocoder, onSelected, country.code).show()
+            }
             .create()
+        // Keep the accessible country field backed by the complete country catalogue.
+        binding.countryInput.setAdapter(ArrayAdapter(context, android.R.layout.simple_dropdown_item_1line,
+            countries.map { CountryOption(it.code, countryNames.getValue(it.code)) }))
 
-        var suppressSuggestionRequests = false
-        var cityRequestVersion = 0
-        var districtRequestVersion = 0
-        var pendingCityRequest: Runnable? = null
-        var pendingDistrictRequest: Runnable? = null
-
-        fun countryFromInput(): CountryOption? = countries.firstOrNull {
-            it.name == binding.countryInput.text?.toString()
+        fun update() {
+            binding.countryInput.setText(countryNames.getValue(country.code), false)
+            binding.stateInput.setText(state?.place?.label.orEmpty(), false)
+            binding.districtInput.setText(district?.label.orEmpty(), false)
+            binding.cityInput.setText(city?.label.orEmpty(), false)
+            binding.stateLayout.isEnabled = !loading && subdivisions.isNotEmpty()
+            binding.districtLayout.isEnabled = !loading && state?.districts?.isNotEmpty() == true
+            binding.cityLayout.isEnabled = !loading && state?.citiesIn(district)?.isNotEmpty() == true
+            binding.progress.visibility = if (loading) View.VISIBLE else View.GONE
+            val selectedPlace = city ?: district ?: state?.place
+            val coordinates = if (selectedPlace == null) country.coordinates else selectedPlace.coordinates
+            binding.searchButton.isEnabled = !loading && coordinates != null
+            binding.coverageText.text = when {
+                loading -> context.getString(R.string.directory_loading)
+                failed -> context.getString(R.string.directory_failed)
+                coordinates == null -> context.getString(R.string.directory_no_coordinates)
+                subdivisions.isEmpty() -> context.getString(R.string.directory_no_regions)
+                state == null -> context.getString(R.string.directory_choose_state)
+                district != null && state!!.citiesIn(district).isEmpty() ->
+                    context.getString(R.string.directory_no_cities)
+                else -> context.getString(R.string.directory_counts,
+                    state!!.districts.size, state!!.citiesIn(district).size)
+            }
         }
 
-        fun clearDependentInputs() {
-            pendingCityRequest?.let(mainHandler::removeCallbacks)
-            pendingDistrictRequest?.let(mainHandler::removeCallbacks)
-            suppressSuggestionRequests = true
-            binding.cityInput.setText("", false)
-            binding.districtInput.setText("", false)
-            suppressSuggestionRequests = false
-            citySuggestionsAdapter.submit(emptyList())
-            districtSuggestionsAdapter.submit(emptyList())
-            cityRequestVersion += 1
-            districtRequestVersion += 1
-        }
-
-        fun scheduleCitySuggestions(rawQuery: String) {
-            pendingCityRequest?.let(mainHandler::removeCallbacks)
-            val query = rawQuery.trim()
-            val country = countryFromInput()
-            val requestVersion = ++cityRequestVersion
-            mainHandler.post {
-                if (
-                    requestVersion == cityRequestVersion &&
-                    binding.cityInput.text?.toString()?.trim() == query
-                ) {
-                    citySuggestionsAdapter.submit(emptyList())
+        fun loadCountry(restore: Boolean = false) {
+            val request = ++generation
+            val code = country.code
+            state = null
+            district = null
+            city = null
+            subdivisions = emptyList()
+            loading = true
+            failed = false
+            update()
+            executor.execute {
+                val result = runCatching { directory.regions(code) }
+                handler.post {
+                    if (!dialog.isShowing || request != generation) return@post
+                    loading = false
+                    failed = result.isFailure
+                    subdivisions = result.getOrDefault(emptyList())
+                    if (restore) {
+                        state = subdivisions.firstOrNull { it.place.id == preferences.getInt("state", -1) }
+                        district = state?.districts?.firstOrNull { it.id == preferences.getInt("district", -1) }
+                        city = state?.citiesIn(district)?.firstOrNull { it.id == preferences.getInt("city", -1) }
+                    }
+                    update()
                 }
             }
-            if (query.length < MIN_SUGGESTION_LENGTH || country == null) return
-
-            pendingCityRequest = Runnable {
-                geocoder.suggestCities(country, query, locale.toLanguageTag()) { result ->
-                    if (
-                        !dialog.isShowing ||
-                        requestVersion != cityRequestVersion ||
-                        binding.cityInput.text?.toString()?.trim() != query
-                    ) {
-                        return@suggestCities
-                    }
-                    result.onSuccess { locations ->
-                        citySuggestionsAdapter.submit(locations)
-                        if (locations.isNotEmpty() && binding.cityInput.hasFocus()) {
-                            binding.cityInput.showDropDown()
-                        }
-                    }
-                }
-            }.also { mainHandler.postDelayed(it, SUGGESTION_DELAY_MS) }
         }
 
-        fun scheduleDistrictSuggestions(rawQuery: String) {
-            pendingDistrictRequest?.let(mainHandler::removeCallbacks)
-            val query = rawQuery.trim()
-            val country = countryFromInput()
-            val city = binding.cityInput.text?.toString().orEmpty().trim()
-            val requestVersion = ++districtRequestVersion
-            mainHandler.post {
-                if (
-                    requestVersion == districtRequestVersion &&
-                    binding.districtInput.text?.toString()?.trim() == query
-                ) {
-                    districtSuggestionsAdapter.submit(emptyList())
-                }
-            }
-            if (query.length < MIN_SUGGESTION_LENGTH || country == null) return
-
-            pendingDistrictRequest = Runnable {
-                geocoder.suggestDistricts(
-                    country,
-                    city,
-                    query,
-                    locale.toLanguageTag(),
-                ) { result ->
-                    if (
-                        !dialog.isShowing ||
-                        requestVersion != districtRequestVersion ||
-                        binding.districtInput.text?.toString()?.trim() != query
-                    ) {
-                        return@suggestDistricts
-                    }
-                    result.onSuccess { locations ->
-                        districtSuggestionsAdapter.submit(locations)
-                        if (locations.isNotEmpty() && binding.districtInput.hasFocus()) {
-                            binding.districtInput.showDropDown()
-                        }
-                    }
-                }
-            }.also { mainHandler.postDelayed(it, SUGGESTION_DELAY_MS) }
-        }
-
-        binding.countryInput.setOnItemClickListener { parent, _, position, _ ->
-            selectedCountry = parent.getItemAtPosition(position) as CountryOption
-            binding.countryLayout.error = null
-            clearDependentInputs()
-            binding.cityInput.requestFocus()
-        }
-        binding.cityInput.doAfterTextChanged { text ->
-            if (suppressSuggestionRequests) return@doAfterTextChanged
-            suppressSuggestionRequests = true
-            binding.districtInput.setText("", false)
-            suppressSuggestionRequests = false
-            districtSuggestionsAdapter.submit(emptyList())
-            districtRequestVersion += 1
-            scheduleCitySuggestions(text?.toString().orEmpty())
-        }
-        binding.districtInput.doAfterTextChanged { text ->
-            if (!suppressSuggestionRequests) {
-                scheduleDistrictSuggestions(text?.toString().orEmpty())
+        fun chooseCountry() = pick(R.string.country, countries, { countryNames.getValue(it.code) }) { chosen ->
+            if (chosen != null && country.code != chosen.code) {
+                country = chosen
+                loadCountry()
             }
         }
-        binding.cityInput.setOnItemClickListener { parent, _, position, _ ->
-            val location = parent.getItemAtPosition(position) as GeocodingResult
-            pendingCityRequest?.let(mainHandler::removeCallbacks)
-            pendingDistrictRequest?.let(mainHandler::removeCallbacks)
-            suppressSuggestionRequests = true
-            binding.cityInput.setText(location.name, false)
-            binding.districtInput.setText("", false)
-            suppressSuggestionRequests = false
-            citySuggestionsAdapter.submit(emptyList())
-            districtSuggestionsAdapter.submit(emptyList())
-            cityRequestVersion += 1
-            districtRequestVersion += 1
-            binding.districtInput.requestFocus()
+        fun chooseState() = pick(R.string.directory_state, subdivisions, { it.place.label }, true) { chosen ->
+            state = chosen
+            district = null
+            city = null
+            update()
         }
-        binding.districtInput.setOnItemClickListener { parent, _, position, _ ->
-            val location = parent.getItemAtPosition(position) as GeocodingResult
-            pendingDistrictRequest?.let(mainHandler::removeCallbacks)
-            suppressSuggestionRequests = true
-            binding.districtInput.setText(location.name, false)
-            suppressSuggestionRequests = false
-            districtSuggestionsAdapter.submit(emptyList())
-            districtRequestVersion += 1
-        }
-
-        fun search() {
-            val country = countries.firstOrNull {
-                it.name == binding.countryInput.text?.toString()
-            }
-            if (country == null) {
-                binding.countryLayout.error = context.getString(R.string.country_required)
-                return
-            }
-            selectedCountry = country
-            binding.searchButton.isEnabled = false
-            binding.searchButton.setText(R.string.searching)
-            binding.progress.visibility = View.VISIBLE
-            binding.resultsLabel.visibility = View.GONE
-            binding.resultsList.visibility = View.GONE
-            binding.emptyText.visibility = View.GONE
-            geocoder.search(
-                selectedCountry,
-                binding.cityInput.text?.toString().orEmpty(),
-                binding.districtInput.text?.toString().orEmpty(),
-                locale.toLanguageTag(),
-            ) { result ->
-                if (!dialog.isShowing) return@search
-                binding.searchButton.isEnabled = true
-                binding.searchButton.setText(R.string.search)
-                binding.progress.visibility = View.GONE
-                result.fold(
-                    onSuccess = { locations ->
-                        resultsAdapter.submit(locations)
-                        binding.resultsLabel.visibility =
-                            if (locations.isEmpty()) View.GONE else View.VISIBLE
-                        binding.resultsList.visibility =
-                            if (locations.isEmpty()) View.GONE else View.VISIBLE
-                        binding.emptyText.setText(R.string.region_search_empty)
-                        binding.emptyText.visibility =
-                            if (locations.isEmpty()) View.VISIBLE else View.GONE
-                    },
-                    onFailure = {
-                        binding.emptyText.setText(R.string.region_search_failed)
-                        binding.emptyText.visibility = View.VISIBLE
-                    },
-                )
+        fun chooseDistrict() {
+            val districts = state?.districts.orEmpty()
+            pick(R.string.directory_district, districts, { item ->
+                val parent = districts.firstOrNull { it.id == item.parentId }
+                if (parent == null) item.label else "${item.label} — ${parent.label}"
+            }, true) { chosen ->
+                district = chosen
+                city = null
+                update()
             }
         }
-
-        binding.searchButton.setOnClickListener { search() }
-        binding.cityInput.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_NEXT) {
-                binding.districtInput.requestFocus()
-                true
-            } else {
-                false
-            }
+        fun chooseCity() = pick(R.string.directory_city, state?.citiesIn(district).orEmpty(), { it.label }, true) {
+            city = it
+            update()
         }
-        binding.districtInput.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                search()
-                true
-            } else {
-                false
+        binding.countryInput.setOnClickListener { chooseCountry() }
+        binding.countryLayout.setEndIconOnClickListener { chooseCountry() }
+        binding.stateInput.setOnClickListener { chooseState() }
+        binding.stateLayout.setEndIconOnClickListener { chooseState() }
+        binding.districtInput.setOnClickListener { chooseDistrict() }
+        binding.districtLayout.setEndIconOnClickListener { chooseDistrict() }
+        binding.cityInput.setOnClickListener { chooseCity() }
+        binding.cityLayout.setEndIconOnClickListener { chooseCity() }
+        binding.coverageText.setOnClickListener { if (failed && !loading) loadCountry() }
+        binding.searchButton.setOnClickListener {
+            val place = city ?: district ?: state?.place
+            val point = if (place == null) country.coordinates else place.coordinates
+            if (point != null) {
+                val name = place?.label ?: countryNames.getValue(country.code)
+                val path = listOfNotNull(city?.label, district?.label, state?.place?.label,
+                    countryNames.getValue(country.code)).distinct().joinToString(", ")
+                val zoom = when { city != null -> 13.0; district != null -> 11.0; state != null -> 8.0; else -> 5.0 }
+                preferences.edit().putString("country", country.code)
+                    .putInt("state", state?.place?.id ?: -1)
+                    .putInt("district", district?.id ?: -1)
+                    .putInt("city", city?.id ?: -1).apply()
+                dialog.dismiss()
+                onSelected(GeocodingResult(name, path, point, zoom))
             }
-        }
-        binding.resultsList.setOnItemClickListener { _, _, position, _ ->
-            resultsAdapter.getItem(position)?.let(onSelected)
-            dialog.dismiss()
         }
         dialog.setOnDismissListener {
-            pendingCityRequest?.let(mainHandler::removeCallbacks)
-            pendingDistrictRequest?.let(mainHandler::removeCallbacks)
-            cityRequestVersion += 1
-            districtRequestVersion += 1
+            generation += 1
+            executor.shutdownNow()
+            handler.removeCallbacksAndMessages(null)
         }
         dialog.show()
+        loadCountry(restore = true)
     }
 
-    private fun defaultCountry(countries: List<CountryOption>): CountryOption {
-        val deviceCountry = Locale.getDefault().country.ifBlank { DEFAULT_COUNTRY_CODE }
-        return countries.firstOrNull { it.code.equals(deviceCountry, ignoreCase = true) }
-            ?: countries.first { it.code == DEFAULT_COUNTRY_CODE }
-    }
-
-    private class PlacesAdapter(context: Context) : BaseAdapter(), Filterable {
-        private val inflater = LayoutInflater.from(context)
-        private var items = emptyList<GeocodingResult>()
-        private val passthroughFilter = object : Filter() {
-            override fun performFiltering(constraint: CharSequence?): FilterResults = FilterResults().apply {
-                values = items
-                count = items.size
-            }
-
-            override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
-                notifyDataSetChanged()
-            }
+    private fun <T> pick(
+        title: Int,
+        items: List<T>,
+        label: (T) -> String,
+        allowClear: Boolean = false,
+        onPicked: (T?) -> Unit,
+    ) {
+        val collator = Collator.getInstance(context.resources.configuration.locales[0])
+        val ordered = items.sortedWith { a, b -> collator.compare(label(a), label(b)) }
+        var visible = ordered
+        val content = LinearLayout(context).apply {
+            orientation = LinearLayout.VERTICAL
+            isFocusableInTouchMode = true
+            setPadding(dp(24), dp(8), dp(24), 0)
         }
-
-        fun submit(newItems: List<GeocodingResult>) {
-            items = newItems
-            notifyDataSetChanged()
+        val searchLayout = TextInputLayout(context).apply { hint = context.getString(R.string.directory_filter) }
+        val search = TextInputEditText(context).apply {
+            id = R.id.directoryFilter
+            inputType = InputType.TYPE_CLASS_TEXT
+            maxLines = 1
         }
-
-        override fun getCount(): Int = items.size
-
-        override fun getItem(position: Int): GeocodingResult = items[position]
-
-        override fun getItemId(position: Int): Long = position.toLong()
-
-        override fun getFilter(): Filter = passthroughFilter
-
-        override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-            val view = convertView ?: inflater.inflate(android.R.layout.simple_list_item_2, parent, false)
-            val item = getItem(position)
-            view.findViewById<TextView>(android.R.id.text1).apply {
-                text = item.name
-                maxLines = 1
-            }
-            view.findViewById<TextView>(android.R.id.text2).apply {
-                text = item.displayName
-                maxLines = 2
-            }
-            return view
+        searchLayout.addView(search)
+        content.addView(searchLayout)
+        val empty = TextView(context).apply {
+            text = context.getString(R.string.directory_no_matches)
+            setPadding(0, dp(16), 0, dp(16))
+            visibility = View.GONE
         }
+        content.addView(empty)
+        val adapter = ArrayAdapter(context, android.R.layout.simple_list_item_1, ordered.map(label).toMutableList())
+        val list = ListView(context).apply {
+            id = R.id.directoryList
+            this.adapter = adapter
+            dividerHeight = 0
+        }
+        content.addView(list, LinearLayout.LayoutParams(-1,
+            minOf(dp(320), (context.resources.displayMetrics.heightPixels * 0.4).toInt())))
+        val builder = MaterialAlertDialogBuilder(context).setTitle(title).setView(content)
+            .setNegativeButton(R.string.close, null)
+        if (allowClear) builder.setNeutralButton(R.string.directory_skip) { _, _ -> onPicked(null) }
+        val picker = builder.create()
+        list.setOnItemClickListener { _, _, position, _ ->
+            val chosen = visible[position]
+            picker.dismiss()
+            onPicked(chosen)
+        }
+        search.doAfterTextChanged { query ->
+            visible = ordered.filter { RegionDirectory.matches(label(it), query.toString()) }
+            adapter.clear()
+            adapter.addAll(visible.map(label))
+            empty.visibility = if (visible.isEmpty()) View.VISIBLE else View.GONE
+        }
+        content.requestFocus()
+        picker.show()
     }
 
-    companion object {
-        private const val DEFAULT_COUNTRY_CODE = "CN"
-        private const val MIN_SUGGESTION_LENGTH = 2
-        private const val SUGGESTION_DELAY_MS = 450L
-    }
+    private fun dp(value: Int) = (value * context.resources.displayMetrics.density).toInt()
 }

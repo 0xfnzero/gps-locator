@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="forest_700">#146B55</color>
-    <color name="forest_600">#1B7D64</color>
-    <color name="coral_600">#D9583B</color>
-    <color name="charcoal_900">#18201E</color>
-    <color name="charcoal_600">#56615E</color>
+    <color name="forest_700">#315FE8</color>
+    <color name="forest_600">#14806A</color>
+    <color name="coral_600">#315FE8</color>
+    <color name="charcoal_900">#172544</color>
+    <color name="charcoal_600">#64718B</color>
     <color name="white">#FFFFFF</color>
     <color name="danger_600">#B3261E</color>
-    <color name="overlay_white">#F7FFFFFF</color>
-    <color name="divider">#DDE3E1</color>
+    <color name="overlay_white">#FCFFFFFF</color>
+    <color name="divider">#E0E6F0</color>
+    <color name="surface_soft">#F3F6FC</color>
+    <color name="primary_soft">#EAF0FF</color>
+    <color name="on_primary_soft">#2347AF</color>
 </resources>

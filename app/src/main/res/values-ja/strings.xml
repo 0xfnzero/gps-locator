@@ -210,4 +210,24 @@
     <string name="contact_support">サポートに連絡</string>
     <string name="support_email_subject">GPSロケーター %1$s サポート</string>
     <string name="support_email_open_failed">メールアプリが見つかりません</string>
+    <string name="nav_saved">保存済み</string>
+    <string name="nav_routes">ルート</string>
+    <string name="directory_hint">オフライン一覧から選択。地区と都市は省略できます。</string>
+    <string name="directory_state">州・都道府県・地域</string>
+    <string name="directory_district">地区・郡（任意）</string>
+    <string name="directory_city">都市・町（任意）</string>
+    <string name="directory_locate">選択した場所を表示</string>
+    <string name="directory_keyword">地名検索</string>
+    <string name="directory_attribution">地域データ: Countries States Cities Database · ODbL 1.0</string>
+    <string name="directory_loading">オフライン一覧を読み込み中…</string>
+    <string name="directory_failed">一覧を読み込めませんでした。タップして再試行するか、名前で検索してください。</string>
+    <string name="directory_no_regions">下位地域の一覧がありません。国を表示するか地名で検索してください。</string>
+    <string name="directory_choose_state">州・都道府県・地域を選択してください。</string>
+    <string name="directory_no_cities">関連する都市がありません。地区を表示するか省略して全都市を確認できます。</string>
+    <string name="directory_counts">地区 %1$d 件 · 都市 %2$d 件。収録範囲は国によって異なります。</string>
+    <string name="directory_filter">一覧を絞り込む</string>
+    <string name="directory_no_matches">一致する項目がありません。別の名前か地名検索をお試しください。</string>
+    <string name="directory_skip">すべて／省略</string>
+    <string name="directory_no_coordinates">座標がありません。別の地域を選択するか地名で検索してください。</string>
+    <string name="undo">元に戻す</string>
 </resources>

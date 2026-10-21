@@ -10,6 +10,7 @@ const packageName = "com.gpsupdater.app";
 const activity = `${packageName}/.MainActivity`;
 const screenshotSize = "1080x1920";
 const screenshotRoot = join(storeRoot, "assets", "phone");
+const refreshDialogsOnly = process.env.GPS_SCREENSHOT_DIALOGS_ONLY === "1";
 const uiDumpPath = "/sdcard/gps-locator-store-ui.xml";
 
 const locales = [
@@ -20,9 +21,9 @@ const locales = [
     routeName: "Sample delivery route",
     favoritesTitle: "Saved locations",
     favorites: [
-      ["Berlin checkout", "Login", 52.520008, 13.404954],
-      ["Tokyo weather", "Localization", 35.6762, 139.6503],
-      ["Sao Paulo delivery", "Delivery", -23.5505, -46.6333],
+      ["Los Angeles checkout", "Login", 34.05223, -118.24368],
+      ["New York weather", "Localization", 40.7128, -74.0060],
+      ["Seattle delivery", "Delivery", 47.6062, -122.3321],
     ],
   },
   {
@@ -32,9 +33,9 @@ const locales = [
     routeName: "示例配送路线",
     favoritesTitle: "收藏位置",
     favorites: [
-      ["柏林结账测试", "登录", 52.520008, 13.404954],
-      ["东京天气场景", "本地化", 35.6762, 139.6503],
-      ["圣保罗配送路线", "配送", -23.5505, -46.6333],
+      ["洛杉矶结账测试", "登录", 34.05223, -118.24368],
+      ["纽约天气场景", "本地化", 40.7128, -74.0060],
+      ["西雅图配送路线", "配送", 47.6062, -122.3321],
     ],
   },
   {
@@ -44,9 +45,9 @@ const locales = [
     routeName: "配送サンプルルート",
     favoritesTitle: "保存した位置",
     favorites: [
-      ["ベルリン決済テスト", "ログイン", 52.520008, 13.404954],
-      ["東京の天気シナリオ", "ローカライズ", 35.6762, 139.6503],
-      ["サンパウロ配送ルート", "配送", -23.5505, -46.6333],
+      ["ロサンゼルス決済テスト", "ログイン", 34.05223, -118.24368],
+      ["ニューヨークの天気", "ローカライズ", 40.7128, -74.0060],
+      ["シアトル配送ルート", "配送", 47.6062, -122.3321],
     ],
   },
   {
@@ -56,9 +57,9 @@ const locales = [
     routeName: "Ruta de reparto de ejemplo",
     favoritesTitle: "Ubicaciones guardadas",
     favorites: [
-      ["Pago en Berlín", "Inicio de sesión", 52.520008, 13.404954],
-      ["Tiempo en Tokio", "Localización", 35.6762, 139.6503],
-      ["Reparto en Sao Paulo", "Entregas", -23.5505, -46.6333],
+      ["Pago en Los Ángeles", "Inicio de sesión", 34.05223, -118.24368],
+      ["Tiempo en Nueva York", "Localización", 40.7128, -74.0060],
+      ["Reparto en Seattle", "Entregas", 47.6062, -122.3321],
     ],
   },
 ];
@@ -139,6 +140,12 @@ function favoritePreferences(fixture) {
 function seedFavorites(fixture) {
   adbText(["shell", "am", "force-stop", packageName]);
   adbText(["shell", "run-as", packageName, "mkdir", "-p", "shared_prefs"]);
+  for (const [file, xml] of Object.entries({
+    mock_location: '<map><string name="latitude">34.05223</string><string name="longitude">-118.24368</string><boolean name="active" value="false" /></map>',
+    region_directory: '<map><string name="country">US</string><int name="state" value="1416" /><int name="district" value="1619" /><int name="city" value="120784" /></map>',
+  })) {
+    adb(["shell", "run-as", packageName, "tee", `shared_prefs/${file}.xml`], { input: xml });
+  }
   adb(
     ["shell", "run-as", packageName, "tee", "shared_prefs/favorite_locations.xml"],
     { input: favoritePreferences(fixture), encoding: "utf8" },
@@ -159,6 +166,15 @@ async function waitForUi(fragment, timeoutMilliseconds = 6_000) {
     await delay(400);
   }
   throw new Error(`UI did not contain ${JSON.stringify(fragment)}\n${lastDump.slice(0, 2_000)}`);
+}
+
+async function waitForRegionDirectory() {
+  const deadline = Date.now() + 15_000;
+  while (Date.now() < deadline) {
+    if (!dumpUi().includes(`resource-id="${packageName}:id/progress"`)) return;
+    await delay(300);
+  }
+  throw new Error("Offline region directory did not finish loading");
 }
 
 function tap(x, y) {
@@ -216,25 +232,30 @@ async function captureLocale(fixture) {
   seedFavorites(fixture);
   adbText(["shell", "am", "start", "-W", "-n", activity]);
   await waitForUi(fixture.appTitle);
-  await delay(4_000);
-  await capture(join(localeDirectory, "01-map-selection.png"), 350_000);
+  // Allow remote map tiles to finish loading before capturing the first screen.
+  await delay(refreshDialogsOnly ? 2_000 : 10_000);
+  if (!refreshDialogsOnly) await capture(join(localeDirectory, "01-map-selection.png"), 350_000);
 
   tapResource("regionSearchButton");
   await waitForUi(fixture.regionTitle);
+  await waitForRegionDirectory();
   await capture(join(localeDirectory, "02-region-search.png"));
   await backToMain(fixture);
 
+  if (!refreshDialogsOnly) {
   tapResource("favoritesButton");
   await waitForUi(fixture.favoritesTitle);
   await waitForUi(fixture.favorites[0][0]);
   await capture(join(localeDirectory, "03-saved-locations.png"));
   await backToMain(fixture);
 
+  }
+
   tapResource("routeButton");
   await waitForUi("sampleRouteButton");
   tapResource("sampleRouteButton");
   await waitForUi(fixture.routeName);
-  await delay(3_500);
+  await delay(5_000);
   await capture(join(localeDirectory, "04-route-editor.png"));
   await backToMain(fixture);
 }
@@ -306,7 +327,7 @@ try {
       "-i",
       join(screenshotRoot, "en-US", "01-map-selection.png"),
       "-vf",
-      "crop=1024:500:28:100,format=rgb24",
+      "crop=1024:500:28:400,format=rgb24",
       "-frames:v",
       "1",
       featureGraphic,

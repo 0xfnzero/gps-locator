@@ -210,4 +210,24 @@
     <string name="contact_support">联系支持</string>
     <string name="support_email_subject">GPS 定位器 %1$s 支持请求</string>
     <string name="support_email_open_failed">没有可用的邮件应用</string>
+    <string name="nav_saved">收藏</string>
+    <string name="nav_routes">路线</string>
+    <string name="directory_hint">直接从离线列表中选择，区县和城市可以跳过。</string>
+    <string name="directory_state">省／州／地区</string>
+    <string name="directory_district">区／县（可选）</string>
+    <string name="directory_city">城市／城镇（可选）</string>
+    <string name="directory_locate">定位所选区域</string>
+    <string name="directory_keyword">地名搜索</string>
+    <string name="directory_attribution">区划数据：Countries States Cities Database · ODbL 1.0</string>
+    <string name="directory_loading">正在加载离线列表…</string>
+    <string name="directory_failed">列表加载失败。点此重试，或使用地名搜索。</string>
+    <string name="directory_no_regions">暂无下级区划列表，可定位当前国家或按地名搜索。</string>
+    <string name="directory_choose_state">选择省、州或地区后，可继续选择区县和城市。</string>
+    <string name="directory_no_cities">暂无关联城市，可定位该区县，或跳过区县查看全部城市。</string>
+    <string name="directory_counts">%1$d 个区县 · %2$d 个城市，各国数据覆盖程度不同。</string>
+    <string name="directory_filter">筛选列表中的名称</string>
+    <string name="directory_no_matches">没有匹配项，可换个名称或使用地名搜索。</string>
+    <string name="directory_skip">全部／跳过</string>
+    <string name="directory_no_coordinates">此条目暂无坐标，请选择其他区域或按地名搜索。</string>
+    <string name="undo">恢复</string>
 </resources>

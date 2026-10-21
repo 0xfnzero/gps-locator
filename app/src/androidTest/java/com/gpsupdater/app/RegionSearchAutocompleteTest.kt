@@ -18,7 +18,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import com.gpsupdater.app.geocoding.CountryOption
 import com.gpsupdater.app.geocoding.GeocodingResult
 import com.gpsupdater.app.geocoding.GeocodingService
-import com.gpsupdater.app.geocoding.RegionSearchDialog
+import com.gpsupdater.app.geocoding.PlaceKeywordSearchDialog
 import com.gpsupdater.app.model.Coordinates
 import org.junit.After
 import org.junit.Assert.assertEquals
@@ -46,7 +46,7 @@ class RegionSearchAutocompleteTest {
     @Test
     fun citySuggestionsAppearAndCanBeSelected() {
         scenario.onActivity { activity ->
-            RegionSearchDialog(activity, FakeGeocodingService()) {}.show()
+            PlaceKeywordSearchDialog(activity, FakeGeocodingService(), {}).show()
         }
 
         onView(withId(R.id.cityInput)).perform(click(), typeText("Ber"))
@@ -62,9 +62,13 @@ class RegionSearchAutocompleteTest {
 
     private fun setApplicationLanguage(languageTag: String) {
         InstrumentationRegistry.getInstrumentation().runOnMainSync {
-            AppCompatDelegate.setApplicationLocales(
-                LocaleListCompat.forLanguageTags(languageTag),
-            )
+            if (android.os.Build.VERSION.SDK_INT >= 33) {
+                InstrumentationRegistry.getInstrumentation().targetContext
+                    .getSystemService(android.app.LocaleManager::class.java).applicationLocales =
+                    android.os.LocaleList.forLanguageTags(languageTag)
+            } else {
+                AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(languageTag))
+            }
         }
     }
 

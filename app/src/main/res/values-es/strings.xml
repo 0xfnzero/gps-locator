@@ -220,4 +220,24 @@
     <string name="contact_support">Contactar con soporte</string>
     <string name="support_email_subject">Soporte de Localizador GPS %1$s</string>
     <string name="support_email_open_failed">No hay ninguna aplicación de correo disponible</string>
+    <string name="nav_saved">Guardados</string>
+    <string name="nav_routes">Rutas</string>
+    <string name="directory_hint">Elige de las listas sin conexión. El distrito y la ciudad son opcionales.</string>
+    <string name="directory_state">Provincia / estado / región</string>
+    <string name="directory_district">Distrito / condado (opcional)</string>
+    <string name="directory_city">Ciudad / localidad (opcional)</string>
+    <string name="directory_locate">Ubicar selección</string>
+    <string name="directory_keyword">Buscar nombre</string>
+    <string name="directory_attribution">Datos: Countries States Cities Database · ODbL 1.0</string>
+    <string name="directory_loading">Cargando lista sin conexión…</string>
+    <string name="directory_failed">No se pudo cargar la lista. Toca aquí para reintentar o busca por nombre.</string>
+    <string name="directory_no_regions">No hay subdivisiones. Ubica el país o busca por nombre.</string>
+    <string name="directory_choose_state">Elige una provincia, un estado o una región.</string>
+    <string name="directory_no_cities">No hay ciudades vinculadas. Ubica el distrito u omítelo para ver todas las ciudades.</string>
+    <string name="directory_counts">%1$d distritos · %2$d ciudades. La cobertura varía según el país.</string>
+    <string name="directory_filter">Filtrar esta lista</string>
+    <string name="directory_no_matches">Sin coincidencias. Prueba otro nombre o busca el lugar.</string>
+    <string name="directory_skip">Todos / omitir</string>
+    <string name="directory_no_coordinates">No hay coordenadas. Elige otra zona o busca por nombre.</string>
+    <string name="undo">Restaurar</string>
 </resources>

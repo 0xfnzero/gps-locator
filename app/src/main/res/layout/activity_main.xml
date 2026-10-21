@@ -14,82 +14,103 @@
     <LinearLayout
         android:id="@+id/topBar"
         android:layout_width="match_parent"
-        android:layout_height="64dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="top"
-        android:layout_marginHorizontal="12dp"
+        android:layout_marginHorizontal="16dp"
         android:layout_marginTop="12dp"
         android:background="@drawable/bg_top_bar"
-        android:elevation="6dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingStart="18dp"
-        android:paddingEnd="8dp">
+        android:elevation="4dp"
+        android:orientation="vertical"
+        android:padding="12dp">
 
         <LinearLayout
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+            <ImageView
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:background="@drawable/bg_icon_circle"
+                android:padding="10dp"
+                android:importantForAccessibility="no"
+                android:src="@drawable/ic_my_location"
+                app:tint="@color/forest_700" />
+            <LinearLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="@string/screen_title"
-                android:textColor="@color/charcoal_900"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/screenSubtitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="1dp"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:text="@string/screen_subtitle"
-                android:textColor="@color/charcoal_600"
-                android:textSize="12sp" />
+                android:layout_marginStart="12dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/screen_title"
+                    android:fontFamily="sans-serif-medium"
+                    android:textColor="@color/charcoal_900"
+                    android:textSize="20sp" />
+                <TextView
+                    android:id="@+id/screenSubtitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="@string/screen_subtitle"
+                    android:textColor="@color/charcoal_600"
+                    android:textSize="12sp" />
+            </LinearLayout>
+            <ImageButton
+                android:id="@+id/developerSettingsButton"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/app_settings"
+                android:padding="13dp"
+                android:src="@drawable/ic_settings"
+                android:tooltipText="@string/app_settings" />
         </LinearLayout>
 
-        <ImageButton
-            android:id="@+id/regionSearchButton"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@string/region_search"
-            android:padding="12dp"
-            android:src="@drawable/ic_region_search"
-            android:tooltipText="@string/region_search" />
-
-        <ImageButton
-            android:id="@+id/routeButton"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@string/routes"
-            android:padding="12dp"
-            android:src="@drawable/ic_route"
-            android:tooltipText="@string/routes" />
-
-        <ImageButton
-            android:id="@+id/favoritesButton"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@string/favorites"
-            android:padding="12dp"
-            android:src="@drawable/ic_favorites"
-            android:tooltipText="@string/favorites" />
-
-        <ImageButton
-            android:id="@+id/developerSettingsButton"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@string/app_settings"
-            android:padding="12dp"
-            android:src="@drawable/ic_settings"
-            android:tooltipText="@string/app_settings" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:baselineAligned="false"
+            android:orientation="horizontal">
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/regionSearchButton"
+                style="@style/Widget.Gps.QuickAction"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
+                android:layout_weight="1"
+                android:layout_marginHorizontal="2dp"
+                android:text="@string/search"
+                android:contentDescription="@string/region_search"
+                app:icon="@drawable/ic_region_search" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/routeButton"
+                style="@style/Widget.Gps.QuickAction"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
+                android:layout_weight="1"
+                android:layout_marginHorizontal="2dp"
+                android:text="@string/nav_routes"
+                android:contentDescription="@string/routes"
+                app:icon="@drawable/ic_route" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/favoritesButton"
+                style="@style/Widget.Gps.QuickAction"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
+                android:layout_weight="1"
+                android:layout_marginHorizontal="2dp"
+                android:text="@string/nav_saved"
+                android:contentDescription="@string/favorites"
+                app:icon="@drawable/ic_favorites" />
+        </LinearLayout>
     </LinearLayout>
 
     <ImageView
@@ -117,7 +138,7 @@
         android:insetRight="0dp"
         android:insetBottom="0dp"
         app:backgroundTint="@color/white"
-        app:cornerRadius="8dp"
+        app:cornerRadius="26dp"
         app:icon="@drawable/ic_my_location"
         app:iconGravity="textStart"
         app:iconPadding="0dp"
@@ -144,16 +165,29 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:background="@drawable/bg_control_panel"
-        android:elevation="16dp"
+        android:elevation="8dp"
         android:orientation="vertical"
         android:paddingStart="20dp"
         android:paddingTop="16dp"
         android:paddingEnd="20dp"
         android:paddingBottom="18dp">
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:text="@string/selected_location"
+            android:textSize="20sp"
+            android:fontFamily="sans-serif-medium"
+            android:textColor="@color/charcoal_900" />
+
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:background="@drawable/bg_soft_card"
+            android:paddingStart="12dp"
+            android:paddingEnd="4dp"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
@@ -184,8 +218,8 @@
 
             <ImageButton
                 android:id="@+id/favoriteCurrentButton"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:layout_marginStart="4dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/favorite_current"
@@ -196,14 +230,15 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/setupMockLocationButton"
-            style="@style/Widget.Material3.Button.OutlinedButton"
+            style="@style/Widget.Gps.Button.Outlined"
             android:layout_width="match_parent"
-            android:layout_height="46dp"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
             android:layout_marginTop="8dp"
             android:text="@string/setup_mock_location"
             android:textAllCaps="false"
             android:textColor="@color/forest_700"
-            app:cornerRadius="8dp"
+            app:cornerRadius="16dp"
             app:icon="@drawable/ic_settings"
             app:iconTint="@color/forest_700"
             app:strokeColor="@color/forest_700" />
@@ -217,16 +252,12 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/latitudeLayout"
-                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense"
+                style="@style/Widget.Gps.Input"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="6dp"
                 android:layout_weight="1"
-                android:hint="@string/latitude"
-                app:boxCornerRadiusBottomEnd="8dp"
-                app:boxCornerRadiusBottomStart="8dp"
-                app:boxCornerRadiusTopEnd="8dp"
-                app:boxCornerRadiusTopStart="8dp">
+                android:hint="@string/latitude">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/latitudeInput"
@@ -241,16 +272,12 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/longitudeLayout"
-                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense"
+                style="@style/Widget.Gps.Input"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="6dp"
                 android:layout_weight="1"
-                android:hint="@string/longitude"
-                app:boxCornerRadiusBottomEnd="8dp"
-                app:boxCornerRadiusBottomStart="8dp"
-                app:boxCornerRadiusTopEnd="8dp"
-                app:boxCornerRadiusTopStart="8dp">
+                android:hint="@string/longitude">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/longitudeInput"
@@ -266,40 +293,43 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="52dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
+            android:gravity="center_vertical"
             android:orientation="horizontal">
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/startButton"
-                style="@style/Widget.Material3.Button"
+                style="@style/Widget.Gps.Button"
                 android:layout_width="0dp"
-                android:layout_height="52dp"
+                android:layout_height="wrap_content"
+                android:minHeight="56dp"
                 android:layout_marginEnd="6dp"
                 android:layout_weight="1"
                 android:text="@string/start_mock"
                 android:textAllCaps="false"
                 android:textSize="15sp"
                 app:backgroundTint="@color/forest_700"
-                app:cornerRadius="8dp"
+                app:cornerRadius="16dp"
                 app:icon="@drawable/ic_play"
                 app:iconTint="@color/white" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/stopButton"
-                style="@style/Widget.Material3.Button.OutlinedButton"
+                style="@style/Widget.Gps.Button.Outlined"
                 android:layout_width="112dp"
-                android:layout_height="52dp"
+                android:layout_height="wrap_content"
+                android:minHeight="56dp"
                 android:layout_marginStart="6dp"
                 android:enabled="false"
                 android:text="@string/stop_mock"
                 android:textAllCaps="false"
-                android:textColor="@color/danger_600"
+                android:textColor="@color/action_stop"
                 android:textSize="15sp"
-                app:cornerRadius="8dp"
+                app:cornerRadius="16dp"
                 app:icon="@drawable/ic_stop"
-                app:iconTint="@color/danger_600"
-                app:strokeColor="@color/danger_600" />
+                app:iconTint="@color/action_stop"
+                app:strokeColor="@color/action_stop" />
         </LinearLayout>
     </LinearLayout>
 

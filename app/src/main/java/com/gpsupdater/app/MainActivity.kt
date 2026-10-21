@@ -351,6 +351,13 @@ class MainActivity : AppCompatActivity() {
 
     private fun configureSystemBars() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
+        WindowCompat.getInsetsController(window, binding.root).apply {
+            isAppearanceLightStatusBars = true
+            isAppearanceLightNavigationBars = true
+        }
+        if (android.os.Build.VERSION.SDK_INT < 27) {
+            window.navigationBarColor = getColor(R.color.charcoal_900)
+        }
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { _, windowInsets ->
             val systemBars = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
             binding.topBar.updateLayoutParams<FrameLayout.LayoutParams> {

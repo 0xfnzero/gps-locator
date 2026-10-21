@@ -98,6 +98,10 @@ class CommercialUiSmokeTest {
 
         onView(withId(R.id.routeNameInput)).check(matches(withText(R.string.sample_route_name)))
         onView(withId(R.id.waypointCountText)).check(matches(withText(containsString("4"))))
+        onView(withId(R.id.undoButton)).perform(click())
+        onView(withId(R.id.waypointCountText)).check(matches(withText(containsString("3"))))
+        onView(withId(com.google.android.material.R.id.snackbar_action)).perform(click())
+        onView(withId(R.id.waypointCountText)).check(matches(withText(containsString("4"))))
     }
 
     @Test

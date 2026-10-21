@@ -216,4 +216,24 @@
     <string name="contact_support">Contact support</string>
     <string name="support_email_subject">GPS Locator %1$s support</string>
     <string name="support_email_open_failed">No email app is available</string>
+    <string name="nav_saved">Saved</string>
+    <string name="nav_routes">Routes</string>
+    <string name="directory_hint">Choose from offline lists. District and city selections are optional.</string>
+    <string name="directory_state">Province / state / region</string>
+    <string name="directory_district">District / county (optional)</string>
+    <string name="directory_city">City / town (optional)</string>
+    <string name="directory_locate">Locate selection</string>
+    <string name="directory_keyword">Name search</string>
+    <string name="directory_attribution">Region data: Countries States Cities Database · ODbL 1.0</string>
+    <string name="directory_loading">Loading offline places…</string>
+    <string name="directory_failed">Could not load this list. Tap here to retry, or search by name.</string>
+    <string name="directory_no_regions">No subdivisions listed. Locate this country or search by name.</string>
+    <string name="directory_choose_state">Choose a province, state or region to browse places.</string>
+    <string name="directory_no_cities">No linked cities listed. Locate this district or skip it to browse all cities.</string>
+    <string name="directory_counts">%1$d districts · %2$d cities. Coverage varies by country.</string>
+    <string name="directory_filter">Filter this list</string>
+    <string name="directory_no_matches">No matches. Try another name or use place search.</string>
+    <string name="directory_skip">All / skip</string>
+    <string name="directory_no_coordinates">No coordinates for this entry. Choose another area or search by name.</string>
+    <string name="undo">Restore</string>
 </resources>

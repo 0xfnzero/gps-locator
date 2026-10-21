@@ -1,0 +1,1 @@
+Refreshed Material 3 interface and improved route map layout. Browse countries, states, counties and cities offline, with searchable lists and remembered selections. Restore accidentally removed waypoints. Updated community links and US example screenshots. Region data coverage varies by country.

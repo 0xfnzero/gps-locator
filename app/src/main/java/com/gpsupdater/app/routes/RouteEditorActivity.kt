@@ -1,6 +1,11 @@
 package com.gpsupdater.app.routes
 
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Paint
+import android.graphics.Typeface
+import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -109,6 +114,13 @@ class RouteEditorActivity : AppCompatActivity() {
 
     private fun configureSystemBars() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
+        WindowCompat.getInsetsController(window, binding.root).apply {
+            isAppearanceLightStatusBars = true
+            isAppearanceLightNavigationBars = true
+        }
+        if (android.os.Build.VERSION.SDK_INT < 27) {
+            window.navigationBarColor = getColor(R.color.charcoal_900)
+        }
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { _, insets ->
             val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             binding.topBar.updateLayoutParams<FrameLayout.LayoutParams> {
@@ -156,8 +168,14 @@ class RouteEditorActivity : AppCompatActivity() {
         binding.addWaypointButton.setOnClickListener { showAddWaypointDialog() }
         binding.undoButton.setOnClickListener {
             if (waypoints.isNotEmpty()) {
-                waypoints.removeAt(waypoints.lastIndex)
+                val removed = waypoints.removeAt(waypoints.lastIndex)
                 updateEditorState()
+                Snackbar.make(binding.controlPanel, removed.name, Snackbar.LENGTH_LONG)
+                    .setAnchorView(binding.controlPanel)
+                    .setAction(R.string.undo) {
+                        waypoints.add(removed)
+                        updateEditorState()
+                    }.show()
             }
         }
         binding.speedSlider.addOnChangeListener { _, value, _ ->
@@ -170,6 +188,13 @@ class RouteEditorActivity : AppCompatActivity() {
         binding.controlPanel.addOnLayoutChangeListener { _, _, top, _, bottom, _, _, _, _ ->
             binding.attributionText.updateLayoutParams<FrameLayout.LayoutParams> {
                 bottomMargin = bottom - top + dp(16)
+            }
+            binding.map.updateLayoutParams<FrameLayout.LayoutParams> {
+                bottomMargin = bottom - top
+            }
+            binding.centerPin.updateLayoutParams<FrameLayout.LayoutParams> {
+                gravity = android.view.Gravity.TOP or android.view.Gravity.CENTER_HORIZONTAL
+                topMargin = top / 2 - dp(28)
             }
         }
     }
@@ -287,11 +312,30 @@ class RouteEditorActivity : AppCompatActivity() {
             routeOverlays += Marker(binding.map).apply {
                 position = GeoPoint(waypoint.coordinates.latitude, waypoint.coordinates.longitude)
                 title = "${index + 1}. ${waypoint.name}"
-                setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+                icon = waypointIcon(index + 1)
+                setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER)
             }
         }
         binding.map.overlays.addAll(routeOverlays)
         binding.map.invalidate()
+    }
+
+    private fun waypointIcon(number: Int): BitmapDrawable {
+        val size = dp(32)
+        val bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+        val center = size / 2f
+        val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+        paint.color = getColor(R.color.white)
+        canvas.drawCircle(center, center, center, paint)
+        paint.color = getColor(R.color.forest_700)
+        canvas.drawCircle(center, center, center - dp(2), paint)
+        paint.color = getColor(R.color.white)
+        paint.textAlign = Paint.Align.CENTER
+        paint.typeface = Typeface.create("sans-serif-medium", Typeface.NORMAL)
+        paint.textSize = dp(if (number < 100) 13 else 10).toFloat()
+        canvas.drawText(number.toString(), center, center - (paint.ascent() + paint.descent()) / 2, paint)
+        return BitmapDrawable(resources, bitmap)
     }
 
     private fun showSavedRoutes() {
@@ -384,7 +428,7 @@ class RouteEditorActivity : AppCompatActivity() {
         val points = waypoints.map { GeoPoint(it.coordinates.latitude, it.coordinates.longitude) }
         if (points.size < 2) return
         binding.map.post {
-            binding.map.zoomToBoundingBox(BoundingBox.fromGeoPoints(points), true, dp(64))
+            binding.map.zoomToBoundingBox(BoundingBox.fromGeoPoints(points), true, binding.topBar.bottom + dp(24))
         }
     }
 
