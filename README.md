@@ -22,11 +22,11 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/0xfnzero/gps-locator/blob/main/README.md">English</a> |
-  <a href="https://github.com/0xfnzero/gps-locator/blob/main/README.zh-CN.md">中文</a> |
-  <a href="https://fnzero.dev/">Website</a> |
-  <a href="https://discord.gg/vuazbGkqQE">Discord</a> |
-  <a href="https://t.me/fnzero_group">Telegram</a>
+    <a href="https://github.com/0xfnzero/gps-locator/blob/main/README.zh-CN.md">中文</a> |
+    <a href="https://github.com/0xfnzero/gps-locator/blob/main/README.md">English</a> |
+    <a href="https://fnzero.dev/">Website</a> |
+    <a href="https://t.me/fnzero_group">Telegram</a> |
+    <a href="https://discord.gg/vuazbGkqQE">Discord</a>
 </p>
 
 <p align="center">
