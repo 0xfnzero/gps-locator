@@ -230,4 +230,6 @@
     <string name="directory_skip">すべて／省略</string>
     <string name="directory_no_coordinates">座標がありません。別の地域を選択するか地名で検索してください。</string>
     <string name="undo">元に戻す</string>
+    <string name="route_playback_speed_label">再生速度</string>
+    <string name="route_playback_speed">再生速度：%1$d×</string>
 </resources>

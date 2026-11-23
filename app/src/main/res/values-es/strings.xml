@@ -240,4 +240,6 @@
     <string name="directory_skip">Todos / omitir</string>
     <string name="directory_no_coordinates">No hay coordenadas. Elige otra zona o busca por nombre.</string>
     <string name="undo">Restaurar</string>
+    <string name="route_playback_speed_label">Velocidad de reproducción</string>
+    <string name="route_playback_speed">Velocidad de reproducción: %1$d×</string>
 </resources>

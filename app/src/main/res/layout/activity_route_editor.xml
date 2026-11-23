@@ -166,6 +166,26 @@
             app:thumbColor="@color/forest_700"
             app:trackColorActive="@color/forest_700" />
 
+        <TextView
+            android:id="@+id/playbackSpeedText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:labelFor="@id/playbackSpeedSlider"
+            android:textColor="@color/charcoal_600"
+            android:textSize="13sp" />
+
+        <com.google.android.material.slider.Slider
+            android:id="@+id/playbackSpeedSlider"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:contentDescription="@string/route_playback_speed_label"
+            android:value="1"
+            android:valueFrom="1"
+            android:valueTo="5"
+            android:stepSize="1"
+            app:thumbColor="@color/forest_700"
+            app:trackColorActive="@color/forest_700" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="48dp"

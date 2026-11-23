@@ -181,6 +181,9 @@ class RouteEditorActivity : AppCompatActivity() {
         binding.speedSlider.addOnChangeListener { _, value, _ ->
             binding.speedText.text = getString(R.string.route_speed, value.toInt())
         }
+        binding.playbackSpeedSlider.addOnChangeListener { _, value, _ ->
+            binding.playbackSpeedText.text = getString(R.string.route_playback_speed, value.toInt())
+        }
         binding.saveStartButton.setOnClickListener { saveAndStart() }
     }
 
@@ -253,6 +256,7 @@ class RouteEditorActivity : AppCompatActivity() {
         waypoints.addAll(SampleRouteFactory.createWaypoints(center, names))
         binding.routeNameInput.setText(R.string.sample_route_name)
         binding.speedSlider.value = SAMPLE_ROUTE_SPEED_KPH
+        binding.playbackSpeedSlider.value = 1f
         binding.loopSwitch.isChecked = false
         updateEditorState()
         zoomToWaypoints()
@@ -271,6 +275,7 @@ class RouteEditorActivity : AppCompatActivity() {
                 name = routeName,
                 waypoints = waypoints.toList(),
                 speedKph = binding.speedSlider.value.toDouble(),
+                playbackSpeed = binding.playbackSpeedSlider.value.toInt(),
                 loop = binding.loopSwitch.isChecked,
                 createdAt = editingCreatedAt,
             )
@@ -293,6 +298,9 @@ class RouteEditorActivity : AppCompatActivity() {
             waypoints.size,
         )
         binding.speedText.text = getString(R.string.route_speed, binding.speedSlider.value.toInt())
+        binding.playbackSpeedText.text = getString(
+            R.string.route_playback_speed, binding.playbackSpeedSlider.value.toInt(),
+        )
         binding.undoButton.isEnabled = waypoints.isNotEmpty()
         binding.sampleRouteButton.visibility = if (waypoints.isEmpty()) View.VISIBLE else View.GONE
         renderRoute()
@@ -419,6 +427,7 @@ class RouteEditorActivity : AppCompatActivity() {
         waypoints.addAll(route.waypoints)
         binding.routeNameInput.setText(route.name)
         binding.speedSlider.value = route.speedKph.toFloat().coerceIn(1f, 160f)
+        binding.playbackSpeedSlider.value = route.playbackSpeed.toFloat()
         binding.loopSwitch.isChecked = route.loop
         updateEditorState()
         zoomToWaypoints()

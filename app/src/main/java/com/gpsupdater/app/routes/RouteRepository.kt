@@ -82,6 +82,7 @@ object RouteJsonCodec {
         .put("id", route.id)
         .put("name", route.name)
         .put("speedKph", route.speedKph)
+        .put("playbackSpeed", route.playbackSpeed)
         .put("loop", route.loop)
         .put("createdAt", route.createdAt)
         .put(
@@ -123,6 +124,7 @@ object RouteJsonCodec {
             name = json.getString("name"),
             waypoints = waypoints,
             speedKph = json.getDouble("speedKph"),
+            playbackSpeed = json.optInt("playbackSpeed", 1),
             loop = json.optBoolean("loop", false),
             createdAt = json.optLong("createdAt", System.currentTimeMillis()),
         )

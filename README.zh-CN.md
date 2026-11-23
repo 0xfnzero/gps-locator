@@ -40,6 +40,8 @@
   <img src="store-listing/assets/phone/zh-CN/04-route-editor.png" alt="多点 GPX KML 路线编辑" width="180">
 </p>
 
+路线编辑器支持 1–5 倍速回放（包括导入的 GPX/KML 路线）；倍速同时加快移动和途经点停留，并随路线保存。
+
 ## Android 模拟位置功能
 
 原生 Android 界面基于 [Material 3](https://m3.material.io/)，采用统一组件样式、地图主视图、带文字的快捷入口，以及圆角位置与路线控制面板。
