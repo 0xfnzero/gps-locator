@@ -84,6 +84,44 @@ class RouteSimulatorTest {
         assertEquals(90f, GeoMath.initialBearingDegrees(start, destination), 0.1f)
     }
 
+    @Test
+    fun playbackSpeed_scalesMovementStopsAndCompletion() {
+        val route = SimulationRoute(
+            name = "Replay",
+            waypoints = listOf(
+                waypoint("Start", Coordinates(0.0, 0.0), stopSeconds = 10),
+                waypoint("End", Coordinates(0.001, 0.0), stopSeconds = 20),
+            ),
+            speedKph = 36.0,
+            loop = false,
+        )
+        for (speed in 1..5) {
+            val normal = RouteSimulator(route)
+            val accelerated = RouteSimulator(route.copy(playbackSpeed = speed))
+            // Cross the initial stop, movement, terminal stop and completion.
+            for (seconds in listOf(5.0, 10.0, 10.0, 30.0)) {
+                val expected = normal.advance(seconds)
+                val actual = accelerated.advance(seconds / speed)
+                assertEquals(expected.coordinates.latitude, actual.coordinates.latitude, 1e-9)
+                assertEquals(expected.progress, actual.progress, 1e-9)
+                assertEquals(expected.elapsedSeconds, actual.elapsedSeconds, 1e-9)
+                assertEquals(expected.isStopped, actual.isStopped)
+                assertEquals(expected.isComplete, actual.isComplete)
+                assertEquals(expected.speedMetersPerSecond * speed, actual.speedMetersPerSecond, 0.001f)
+            }
+        }
+    }
+
+    @Test
+    fun playbackSpeed_acceleratesLoops() {
+        val route = route(Coordinates(0.0, 0.0), Coordinates(0.001, 0.0), 36.0, loop = true)
+        val expected = RouteSimulator(route).advance(100.0)
+        val actual = RouteSimulator(route.copy(playbackSpeed = 5)).advance(20.0)
+        assertEquals(expected.lap, actual.lap)
+        assertEquals(expected.progress, actual.progress, 1e-9)
+        assertFalse(actual.isComplete)
+    }
+
     private fun route(
         start: Coordinates,
         end: Coordinates,

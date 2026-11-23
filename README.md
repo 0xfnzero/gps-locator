@@ -40,6 +40,8 @@
   <img src="store-listing/assets/phone/en-US/04-route-editor.png" alt="Multi-point GPX KML route editor" width="180">
 </p>
 
+Route replay supports 1×–5× speed in the route editor, including imported GPX/KML routes. The multiplier accelerates travel and waypoint stops and is saved with the route.
+
 ## Android mock location features
 
 The native Android UI uses [Material 3](https://m3.material.io/) with shared component styles, a map-first layout, labeled quick actions, and rounded location and route controls.

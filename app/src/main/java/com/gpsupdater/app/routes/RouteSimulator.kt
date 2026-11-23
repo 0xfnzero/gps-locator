@@ -48,7 +48,8 @@ class RouteSimulator(private val route: SimulationRoute) {
 
     fun advance(deltaSeconds: Double): RoutePosition {
         require(deltaSeconds.isFinite() && deltaSeconds >= 0)
-        var remainingSeconds = deltaSeconds
+        // Scale the simulation clock so waypoint stops accelerate with movement.
+        var remainingSeconds = deltaSeconds * route.playbackSpeed
         var iterations = 0
         while (remainingSeconds > 1e-9 && !complete) {
             check(iterations++ < MAX_ADVANCE_ITERATIONS) { "Route contains too many zero-length steps" }
@@ -137,7 +138,7 @@ class RouteSimulator(private val route: SimulationRoute) {
         val isStopped = stopRemainingSeconds > 1e-9 || complete
         return RoutePosition(
             coordinates = coordinates,
-            speedMetersPerSecond = if (isStopped) 0f else speedMetersPerSecond.toFloat(),
+            speedMetersPerSecond = if (isStopped) 0f else (speedMetersPerSecond * route.playbackSpeed).toFloat(),
             bearingDegrees = if (isStopped || legIndex < 0) {
                 0f
             } else {

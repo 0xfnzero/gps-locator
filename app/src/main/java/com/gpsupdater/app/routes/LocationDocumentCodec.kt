@@ -35,6 +35,7 @@ object LocationDocumentCodec {
         append("<gpx version=\"1.1\" creator=\"GPS Locator\" xmlns=\"http://www.topografix.com/GPX/1/1\" xmlns:gpsupdater=\"https://gpsupdater.app/schema/1\">\n")
         append("  <trk><name>${escape(route.name)}</name><extensions>")
         append("<gpsupdater:speedKph>${route.speedKph}</gpsupdater:speedKph>")
+        append("<gpsupdater:playbackSpeed>${route.playbackSpeed}</gpsupdater:playbackSpeed>")
         append("<gpsupdater:loop>${route.loop}</gpsupdater:loop></extensions><trkseg>\n")
         route.waypoints.forEach { waypoint ->
             append("    <trkpt lat=\"${waypoint.coordinates.latitude}\" lon=\"${waypoint.coordinates.longitude}\">")
@@ -50,6 +51,7 @@ object LocationDocumentCodec {
         append("<kml xmlns=\"http://www.opengis.net/kml/2.2\"><Document>")
         append("<name>${escape(route.name)}</name>")
         append("<ExtendedData><Data name=\"speedKph\"><value>${route.speedKph}</value></Data>")
+        append("<Data name=\"playbackSpeed\"><value>${route.playbackSpeed}</value></Data>")
         append("<Data name=\"loop\"><value>${route.loop}</value></Data></ExtendedData>\n")
         route.waypoints.forEachIndexed { index, waypoint ->
             append("<Placemark><name>${escape(waypoint.name)}</name>")
@@ -89,6 +91,7 @@ object LocationDocumentCodec {
             waypoints = waypoints,
             speedKph = speed.coerceIn(SimulationRoute.MIN_SPEED_KPH, SimulationRoute.MAX_SPEED_KPH),
             loop = loop,
+            playbackSpeed = container.descendantText("playbackSpeed").toIntOrNull() ?: 1,
         )
     }
 
@@ -132,6 +135,7 @@ object LocationDocumentCodec {
             waypoints = waypoints,
             speedKph = speed.coerceIn(SimulationRoute.MIN_SPEED_KPH, SimulationRoute.MAX_SPEED_KPH),
             loop = loop,
+            playbackSpeed = document.dataValue("playbackSpeed")?.toIntOrNull() ?: 1,
         )
     }
 

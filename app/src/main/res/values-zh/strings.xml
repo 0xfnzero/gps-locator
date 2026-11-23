@@ -230,4 +230,6 @@
     <string name="directory_skip">全部／跳过</string>
     <string name="directory_no_coordinates">此条目暂无坐标，请选择其他区域或按地名搜索。</string>
     <string name="undo">恢复</string>
+    <string name="route_playback_speed_label">回放倍速</string>
+    <string name="route_playback_speed">回放倍速：%1$d×</string>
 </resources>

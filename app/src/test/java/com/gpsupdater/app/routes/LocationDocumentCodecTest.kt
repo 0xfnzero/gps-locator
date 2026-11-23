@@ -23,6 +23,7 @@ class LocationDocumentCodecTest {
         ),
         speedKph = 42.0,
         loop = true,
+        playbackSpeed = 4,
     )
 
     @Test
@@ -49,6 +50,7 @@ class LocationDocumentCodecTest {
             """<kml xmlns="http://www.opengis.net/kml/2.2"><Document><name>Line</name><Placemark><LineString><coordinates>10,20,0 11,21,0</coordinates></LineString></Placemark></Document></kml>""",
         )
 
+        assertEquals(1, imported.playbackSpeed)
         assertEquals(2, imported.waypoints.size)
         assertEquals(Coordinates(20.0, 10.0), imported.waypoints.first().coordinates)
     }
@@ -62,10 +64,29 @@ class LocationDocumentCodecTest {
         }
     }
 
+    @Test
+    fun oldGpx_defaultsToNormalPlayback() {
+        val document = LocationDocumentCodec.export(route, LocationDocumentFormat.GPX)
+            .replace("<gpsupdater:playbackSpeed>4</gpsupdater:playbackSpeed>", "")
+        assertEquals(1, LocationDocumentCodec.import(document).playbackSpeed)
+    }
+
+    @Test
+    fun savedRoutes_preservePlaybackSpeedAndReadOldRoutes() {
+        val encoded = RouteJsonCodec.encode(route)
+        assertEquals(4, RouteJsonCodec.decode(encoded)!!.playbackSpeed)
+        val old = org.json.JSONObject(encoded).apply { remove("playbackSpeed") }.toString()
+        assertEquals(1, RouteJsonCodec.decode(old)!!.playbackSpeed)
+        for (speed in listOf(0, 6)) {
+            assertThrows(IllegalArgumentException::class.java) { route.copy(playbackSpeed = speed) }
+        }
+    }
+
     private fun assertRouteMatches(imported: SimulationRoute) {
         assertEquals(route.name, imported.name)
         assertEquals(route.speedKph, imported.speedKph, 0.001)
         assertEquals(route.loop, imported.loop)
+        assertEquals(route.playbackSpeed, imported.playbackSpeed)
         assertEquals(route.waypoints.map { it.name }, imported.waypoints.map { it.name })
         assertEquals(
             route.waypoints.map { it.stopDurationSeconds },

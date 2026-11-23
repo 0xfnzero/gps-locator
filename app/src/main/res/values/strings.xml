@@ -236,4 +236,6 @@
     <string name="directory_skip">All / skip</string>
     <string name="directory_no_coordinates">No coordinates for this entry. Choose another area or search by name.</string>
     <string name="undo">Restore</string>
+    <string name="route_playback_speed_label">Replay speed</string>
+    <string name="route_playback_speed">Replay speed: %1$d×</string>
 </resources>
